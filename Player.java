@@ -5,8 +5,9 @@ public class Player
 	private int score = 0;
 	private Frame frame = new Frame();
 	
-	public Player(Frame f)
+	public Player(String n, Frame f)
 	{
+		setName(n);
 		setFrame(f);
 	}
 	

@@ -4,17 +4,12 @@ public class Frame //extends Pool
 {   
 	private char[] frame = {' ', ' ', ' ', ' ', ' ', ' ', ' '};
 
-	public Frame()
-	{
-		;
-	}
-	
 	public char removeLetter(char letter) 
 	{
 		char removedLetter = ' ';
 		for(int i = 0; i < 7; i++) 
 		{
-			if(frame[i] == letter) 
+			if(frame[i] == Character.toUpperCase(letter)) 
 			{
 				removedLetter = frame[i];
 				frame[i] = ' ';
@@ -26,12 +21,12 @@ public class Frame //extends Pool
 		return removedLetter;
 	}
 	
-	public char[] getFrame() 
+	public char getLetter(int index) 
 	{
-		return frame;
+		return frame[index];
 	}
 	
-	public void addLetter(char c) 
+	/*public void addLetter(char c) 
 	{
 		for(int i = 0; i < 7; i++)
 		{
@@ -41,7 +36,7 @@ public class Frame //extends Pool
 				break;
 			}
 		}
-	}
+	}*/
 	
 	public boolean isFrameEmpty()
 	{	
@@ -61,23 +56,31 @@ public class Frame //extends Pool
 		for(int i = 0; i < 7; i++) {
 			if(frame[i] == c) 
 			{
-				System.out.println(c + " is on the frame.");
+				//System.out.println(c + " is on the frame.");
 				return true;
 			}
 		}
-		System.out.println(c + " is not on the frame.");
+		//System.out.println(c + " is not on the frame.");
 		return false;
 	}
 	
-	public void refillFrame(char[] c)
+	public void refillFrame(/*char[] c*/)
 	{
-		if(isFrameEmpty()) 
+		/*if(isFrameEmpty()) 
 		{
 			int i=0;
 			while(i < 7) 
 			{
 				addLetter(c[i]);
 				i++;
+			}
+		}*/
+		
+		for(int i = 0; i < 7; i++) 
+		{
+			if(frame[i] == ' ') 
+			{
+				frame[i] = Pool.removeTileRandomly();
 			}
 		}
 	}
@@ -92,6 +95,6 @@ public class Frame //extends Pool
 	
 	public void displayFrame() 
 	{
-		System.out.println(Arrays.toString(getFrame()));
+		System.out.println(Arrays.toString(frame));
 	}	
 }
