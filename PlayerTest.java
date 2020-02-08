@@ -6,26 +6,26 @@ public class PlayerTest
 	{
 		Pool p = new Pool();
 		Frame f = new Frame();
-		Player player = new Player(f);
+		Player player = new Player("Emanuel", f);
+
 		
-		player.setName("Emanuel");
 		player.displayName();
+		System.out.println(player.getScore());
+	
+		p.displayNumTilesInPool();
+		player.getFrame().displayFrame();
+		
+		player.getFrame().refillFrame();
 		player.getFrame().displayFrame();
 		p.displayNumTilesInPool();
-		char[] array = {' ', ' ', ' ', ' ', ' ', ' ', ' '};
-		
-		for(int i = 0; i < 7; i++) 
-		{
-			array[i] = p.removeTileRandomly();
-		}
-		
-		player.getFrame().refillFrame(array);
-		player.getFrame().displayFrame();
-		p.displayNumTilesInPool();
+		System.out.println(player.getFrame().getLetter(6));
 		
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Choose a tile to remove from the frame.");
-		//player.getFrame().removeLetter(scanner.next());
-		
+		char c = player.getFrame().removeLetter(scanner.next().charAt(0)); //removes first occurence of your input character
+		player.getFrame().displayFrame();
+		player.increaseScore(p.tileValue(c));
+		System.out.println(player.getScore());
+		scanner.close();
 	}
 }
