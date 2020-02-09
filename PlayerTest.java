@@ -2,13 +2,14 @@ import java.io.*;
 import java.util.*;
 public class PlayerTest 
 {
-	public static void main(String[] args) 
+	public static void main(String[] args) //driver method checks implementation
 	{
+		//new instances of the objects are created
 		Pool p = new Pool();
 		Frame f = new Frame();
 		Player player = new Player("Emanuel", f);
 
-		
+		//the output from the methods is displayed and checked
 		player.displayName();
 		System.out.println(player.getScore());
 	
@@ -20,7 +21,7 @@ public class PlayerTest
 		p.displayNumTilesInPool();
 		System.out.println(player.getFrame().getLetter(6));
 		
-		Scanner scanner = new Scanner(System.in);
+		Scanner scanner = new Scanner(System.in); //allowing user to enter tile to be removed
 		System.out.println("Choose a tile to remove from the frame.");
 		char c = player.getFrame().removeLetter(scanner.next().charAt(0)); //removes first occurence of your input character
 		player.getFrame().displayFrame();
