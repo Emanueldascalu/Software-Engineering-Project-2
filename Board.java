@@ -1,11 +1,11 @@
-
+import java.util.*;
 public class Board 
 {
 	//Add enum with TL, DL, TW and DW or N
 	//State of the board at the beginning of the game.
 	//Abbreviations for Triple Word, Double Word, Triple Letter and Double Letter
 	//@@ = Middle Square
-	public String[][] board = 
+	private String[][] board = 
 		{
 				{"TW", "  ", "  ", "DL", "  ", "  ", "  ", "TW", "  ", "  ", "  ", "DL", "  ", "  ", "TW"},
 				{"  ", "DW", "  ", "  ", "  ", "TL", "  ", "  ", "  ", "TL", "  ", "  ", "  ", "DW", "  "},
@@ -24,14 +24,25 @@ public class Board
 				{"TW", "  ", "  ", "DL", "  ", "  ", "  ", "TW", "  ", "  ", "  ", "DL", "  ", "  ", "TW"}
 		};
 	
+	public void printLine() 
+	{
+		System.out.println("----------------------------------------------");
+	}
+	
 	public void displayBoard()
 	{
+		printLine();
 		for(int i = 0; i < 15; i++) 
 		{
+			System.out.print("|");
 			for(int j = 0; j < 15; j++) 
 			{
-				
+				System.out.print(board[i][j] + "|");
 			}
+			
+			System.out.println();
+			printLine();
 		}
+		
 	}
 }
