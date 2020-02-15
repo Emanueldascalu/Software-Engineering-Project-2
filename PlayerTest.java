@@ -1,7 +1,16 @@
-import java.io.*; 
+
+
+
+import org.junit.jupiter.api.Test;
 import java.util.*;
+
 public class PlayerTest 
 {
+	PlayerTest P1;
+	
+	
+	@Test
+	
 	public static void main(String[] args) 
 	{
 		Pool p = new Pool();
@@ -23,6 +32,7 @@ public class PlayerTest
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Choose a tile to remove from the frame.");
 		char c = player.getFrame().removeLetter(scanner.next().charAt(0)); //removes first occurence of your input character
+		player.getFrame().refillFrame();
 		player.getFrame().displayFrame();
 		player.increaseScore(p.tileValue(c));
 		System.out.println(player.getScore());
