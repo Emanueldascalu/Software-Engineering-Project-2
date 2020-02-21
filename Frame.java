@@ -1,47 +1,40 @@
+//By Alphabet Inc. : 
+//Emanuel Dascalu, 18729365 
+//Pranchal Narang, 18339361  
+//Taranpreet Singh, 18203372
+
 import java.util.Arrays;
 
-public class Frame //extends Pool
+public class Frame
 {   
-	private char[] frame = {' ', ' ', ' ', ' ', ' ', ' ', ' '};
+	private char[] frame = {' ', ' ', ' ', ' ', ' ', ' ', ' '}; //empty frame
 
-	public char removeLetter(char letter) 
+	public char removeLetter(char letter) //removes given letter from frame
 	{
 		char removedLetter = ' ';
 		for(int i = 0; i < 7; i++) 
 		{
-			if(frame[i] == Character.toUpperCase(letter)) 
+			if(frame[i] == Character.toUpperCase(letter)) // all letters stored in the frames are uppercase
 			{
 				removedLetter = frame[i];
 				frame[i] = ' ';
 				System.out.println(removedLetter + " tile was removed from frame.");
-				break;
+				break; //ending loop execution once letter has been removed
 			}
 		}
 		
 		return removedLetter;
 	}
 	
-	public char getLetter(int index) 
+	public char getLetter(int index) //gets the letter at given index in frame
 	{
 		return frame[index];
 	}
-	
-	/*public void addLetter(char c) 
-	{
-		for(int i = 0; i < 7; i++)
-		{
-			if(frame[i] == ' ') 
-			{
-				frame[i] = c;
-				break;
-			}
-		}
-	}*/
-	
+
 	public boolean isFrameEmpty()
 	{	
-		for(int i = 0; i < 7; i++) {
-			if(frame[i] != ' ') 
+		for(int i = 0; i < 7; i++) { //loops through frame and if a letter is found in any position, returns false
+			if(frame[i] != ' ')
 			{
 				//System.out.println("Frame is not empty");
 				return false;
@@ -51,7 +44,7 @@ public class Frame //extends Pool
 		return true;
 	}
 	
-	public boolean isLetterInFrame(char c)
+	public boolean isLetterInFrame(char c)//checks if a given letter is available in the frame
 	{	
 		for(int i = 0; i < 7; i++) {
 			if(frame[i] == c) 
@@ -66,17 +59,8 @@ public class Frame //extends Pool
 	
 	public void refillFrame(/*char[] c*/)
 	{
-		/*if(isFrameEmpty()) 
-		{
-			int i=0;
-			while(i < 7) 
-			{
-				addLetter(c[i]);
-				i++;
-			}
-		}*/
-		
-		for(int i = 0; i < 7; i++) 
+
+		for(int i = 0; i < 7; i++) //loops through frame and places random letters in empty spaces
 		{
 			if(frame[i] == ' ') 
 			{
@@ -85,7 +69,7 @@ public class Frame //extends Pool
 		}
 	}
 	
-	public void resetFrame() 
+	public void resetFrame() //resets the entire frame to blank frame
 	{
 		for(int i = 0; i < 7; i++) 
 		{
@@ -95,6 +79,6 @@ public class Frame //extends Pool
 	
 	public void displayFrame() 
 	{
-		System.out.println(Arrays.toString(frame));
+		System.out.println(Arrays.toString(frame));//displays the frame character array as a string
 	}	
 }
