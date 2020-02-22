@@ -69,6 +69,14 @@ public class Board
 			System.out.println("Word is outside of bounds");
 		}
 		
+		else if(numOfWordsOnBoard == 0) 
+		{
+			for(int i = 0; i < 15; i++) 
+			{
+				
+			}
+		}
+		
 		else
 		{
 			//wordToBePlaced is converted from a string to a char array
@@ -78,6 +86,7 @@ public class Board
 				if(!f.isLetterInFrame(wordToBePlaced.toCharArray()[i])) 
 				{
 					System.out.println(wordToBePlaced.toCharArray()[i] + " is not in the frame");
+					System.out.println("Can't place " + wordToBePlaced + " on the board");
 					break;
 				}
 				
@@ -128,15 +137,22 @@ public class Board
 	
 	public void printLine() 
 	{
-		System.out.println("----------------------------------------------------------------------------");
+		
+		System.out.println("  ----------------------------------------------------------------------------");
 	}
 	
 	public void displayBoard()
 	{
+		System.out.println("    A    B    C    D    E    F    G    H    I    J    K    L    M    N    O   ");
 		printLine();
 		for(int i = 0; i < 15; i++) 
 		{
-			System.out.print("|");
+			if(i >= 10)
+			System.out.print(i + "|");
+			
+			else
+			System.out.print(i + " |");
+			
 			for(int j = 0; j < 15; j++) 
 			{
 				System.out.print(" " + board[i][j] + " |");//Taran-just made a small change here to make the board look better
