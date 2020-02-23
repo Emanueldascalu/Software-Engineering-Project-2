@@ -3,8 +3,7 @@
 //Pranchal Narang, 18339361... github username lakeshnarang
 //Taranpreet Singh, 18203372
 
-import java.util.*;
-public class Board 
+public class Board
 {
 	//State of the board at the beginning of the game.
 	//Abbreviations for Triple Word, Double Word, Triple Letter and Double Letter
