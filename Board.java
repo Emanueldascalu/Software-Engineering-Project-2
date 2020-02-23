@@ -1,3 +1,8 @@
+//By Alphabet Inc. :
+//Emanuel Dascalu, 18729365
+//Pranchal Narang, 18339361... github username lakeshnarang
+//Taranpreet Singh, 18203372
+
 import java.util.*;
 public class Board 
 {
