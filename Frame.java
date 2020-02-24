@@ -26,6 +26,24 @@ public class Frame
 		return removedLetter;
 	}
 	
+	public char[] getFrame() 
+	{
+		return frame;
+	}
+	
+	public void setFrame(char[] a) 
+	{
+		if(a.length != 7) 
+		{
+			throw new IllegalArgumentException("Incorrect array size");
+		}
+		
+		for(int i = 0; i < 7; i++) 
+		{
+			frame[i] = a[i]; 
+		}
+	}
+	
 	public char getLetter(int index) //gets the letter at given index in frame
 	{
 		return frame[index];
