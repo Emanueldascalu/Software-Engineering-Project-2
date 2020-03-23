@@ -1,7 +1,13 @@
 package application;
 
-public class Tile {
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
+public class Tile extends Rectangle{
+
+	private static final int tile_size = 30;
     private static final int BLANK_VALUE = 0;
     private static final int[] TILE_VALUE = 
     {1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,10};
@@ -13,6 +19,9 @@ public class Tile {
     // Tile precondition: must be uppercase letter
     Tile(char letter) 
     {
+    	setWidth(tile_size);
+    	setHeight(tile_size);
+    	
         if (letter == '_') 
         {
             this.blank = true;

@@ -27,47 +27,19 @@ import javafx.scene.paint.Color;
 import java.util.concurrent.CountDownLatch;
 import javafx.scene.control.Label;
 
-public class UI extends Application
-{
-	/*public static final CountDownLatch latch = new CountDownLatch(1);
-    public static UI ui = null;
-
-    public static UI waitForUI() 
-    {
-        try 
-        {
-            latch.await();
-        } 
-        
-        catch (InterruptedException e) 
-        {
-            e.printStackTrace();
-        }
-        return ui;
-    }
-
-    public static void setUI(UI ui1) {
-        ui = ui1;
-        latch.countDown();
-    }
-
-    public UI() {
-        setUI(this);
-    }
-
-    public void printSomething() {
-        System.out.println("You called a method on the application");
-    }*/
-	
-	
+public class UI
+{	
 	private Square[][] squares = new Square[Board.BOARD_SIZE][Board.BOARD_SIZE];
-	private VBox root;
-	private Button startGame;
-	private Player p1 = new Player(); 
-	private Player p2 = new Player();
-	private boolean player1Turn = true;
 	
-	public void setPlayerNames() 
+	private boolean player1Turn = true;
+	private boolean endOfGame = false;
+	
+	public boolean isEndOfGame() 
+	{
+		return endOfGame;
+	}
+	
+	public void setPlayerNames(Player p1, Player p2, Stage mainStage) 
 	{
 		//New popup to enter two players' names
 		Stage enterName = new Stage();
@@ -97,9 +69,7 @@ public class UI extends Application
         
         Scene nameOfPlayersScene = new Scene(nameOfPlayersVbox, 300, 200);
         enterName.setScene(nameOfPlayersScene);
-        
-        
-        startGame.setOnMouseClicked(e -> enterName.show());
+        enterName.show();
         
         //namesConfirmed Button can't be clicked until there is something in both textfields
         BooleanBinding textField1Valid = Bindings.createBooleanBinding(() -> {
@@ -125,38 +95,93 @@ public class UI extends Application
     	{
     		p1.setName(getName1.getText());
    			p2.setName(getName2.getText());
-   			System.out.println("Player1: " + p1.getName() + "\nPlayer2: " + p2.getName());
+
    			enterName.hide();
-   			root.getChildren().remove(startGame);
-   			promptMove();
+   			loops(p1, p2, mainStage);
     	});           
 	}
 	
-	public void promptMove() 
+	public void loops(Player p1, Player p2, Stage mainStage) 
 	{
-		Text makeAMoveP1 = new Text(p1.getName() + " make a move");
-		Text makeAMoveP2 = new Text(p2.getName() + " make a move");
+		//Scanner scanner = new Scanner(System.in);
+		//while(!endOfGame)
+		
+		//loops() is meant to implement the above while loop
+		//for loop is just a placeholder for now, needs to be implemented properly
+		for(int i = 0; i < 8; i++) 
+		{
+			if(player1Turn) 
+			{
+				promptMove(mainStage, showBoard(), p1 /*scanner*/);
+				player1Turn = false;
+			}
+			
+			else 
+			{
+				promptMove(mainStage, showBoard(), p2 /*scanner*/);
+				player1Turn = true; 
+			}
+		}
+		//scanner.close();
+	}
+	
+	public void promptMove(Stage mainStage, VBox vbox, Player player/*, Scanner scanner*/) 
+	{
+		Text makeAMove = new Text(player.getName() + " make a move");
+		
 		Button endTurn = new Button();
 		endTurn.setText("End Turn");
 		
-		if(player1Turn) 
+		GridPane playerTiles = new GridPane();
+			
+		vbox.getChildren().addAll(makeAMove, endTurn, playerTiles);
+		for(int i = 0; i < 7; i++) 
 		{
-			root.getChildren().addAll(makeAMoveP1, endTurn);
-			player1Turn = false;
+			StackPane stack = new StackPane();
+			Text text = new Text("");
+			Tile t = player.getFrame().getTiles().get(i);
+			
+			text = new Text(Character.toString(t.getLetter()));
+			t.setFill(Color.YELLOW);
+			stack.getChildren().addAll(t, text);
+			playerTiles.add(stack, i, 0);
 		}
 		
-		else 
-		{
-			root.getChildren().addAll(makeAMoveP2, endTurn);
-			player1Turn = true;
-		}
+		playerTiles.setAlignment(Pos.CENTER);
+		playerTiles.setGridLinesVisible(true);
 		
+		mainStage.getScene().setRoot(vbox);
+		
+		/*endTurn.setOnMouseClicked(e -> 
+		{
+			String command = scanner.next();
+			switch(command) 
+			{
+				case "QUIT":
+					endOfGame = true;
+					break;
+					
+				case "PASS":
+					break;
+					
+				case "HELP":
+					break;
+					
+				case "EXCHANGE":
+					break;	
+					
+				default:
+					break;
+			}
+		});
+		
+		
+		//mainStage.show();		*/
 	}
 	
-	@Override
-	public void start(Stage primaryStage) 
-	{	
-		root = new VBox(8);
+	public VBox showBoard() 
+	{
+		VBox root = new VBox(8);
 		root.setPadding(new Insets(20, 20, 20, 20));
 		GridPane grid = new GridPane();
 		
@@ -219,16 +244,6 @@ public class UI extends Application
 		grid.setAlignment(Pos.CENTER);
 		grid.setGridLinesVisible(true);
 		
-		startGame = new Button();
-		
-		startGame.setText("Start Game");
-
-		root.getChildren().add(startGame);
-		
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Scrabble");
-		primaryStage.setScene(scene);
-		primaryStage.show();  
-		setPlayerNames();
-    }
+		return root;
+	}
 }
