@@ -1,6 +1,10 @@
 package application;
 
 import java.util.ArrayList;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 public class Frame 
 {
@@ -15,7 +19,7 @@ public class Frame
 
 	public int size() 
 	{
-		return(tiles.size());
+		return tiles.size();
 	}
 
 	public boolean isEmpty() 
@@ -71,10 +75,15 @@ public class Frame
 	}
 
 	// getTile precondition: isAvailable(letters) is true
-	public Tile getTile(Character letter) 
+	/*public Tile getTile(Character letter) 
 	{
 		int index = tiles.indexOf(new Tile(letter));
 		return tiles.get(index);
+	}*/
+	
+	public Tile getTile(int i) 
+	{
+		return tiles.get(i);
 	}
 
 	// removeTile precondition: isAvailable(letters) is true
@@ -89,7 +98,20 @@ public class Frame
 		ArrayList<Tile> draw = pool.drawTiles(numTilesToDraw);
 		tiles.addAll(draw);
 	}
-
+	
+	public void exchange(Pool pool /*int numTilesToBeRemoved*/) 
+	{
+		//Tile toBeExchanged = new Tile(tiles.);
+		//System.out.println(isFull());
+		int currentSize = size();
+		for (int i = 0; i < currentSize; i++) 
+		{
+			remove(getTile(0));
+		}
+		
+		refill(pool);
+		
+	}
 	// test setter
 	public void setTiles(String letters) 
 	{

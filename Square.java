@@ -7,17 +7,17 @@ import javafx.scene.text.Text;
 
 public class Square extends Rectangle
 {
-
+	private static final int square_size = 30;
     private int letterMuliplier;
     private int wordMultiplier;
     private boolean isOccupied;
-    StackPane stack = new StackPane();
+    //StackPane stack = new StackPane();
     private Tile tile;
 
-    Square(int letterMultiplier, int wordMultiplier, int x, int y) 
+    Square(int letterMultiplier, int wordMultiplier) 
     {
-    	setWidth(UI.square_size);
-    	setHeight(UI.square_size);
+    	setWidth(square_size);
+    	setHeight(square_size);
     	
         isOccupied = false;
         this.letterMuliplier = letterMultiplier;

@@ -1,8 +1,9 @@
 package application;
 
-import java.util.Scanner;
+//import java.util.Scanner;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.stage.Modality;
@@ -27,19 +28,13 @@ import javafx.scene.paint.Color;
 import java.util.concurrent.CountDownLatch;
 import javafx.scene.control.Label;
 
-public class UI
-{	
-	private Square[][] squares = new Square[Board.BOARD_SIZE][Board.BOARD_SIZE];
+public class UI extends Application
+{		
+	private Stage mainStage;
 	
-	private boolean player1Turn = true;
-	private boolean endOfGame = false;
 	
-	public boolean isEndOfGame() 
-	{
-		return endOfGame;
-	}
 	
-	public void setPlayerNames(Player p1, Player p2, Stage mainStage) 
+	public void setPlayerNames(Player p1, Player p2, Scrabble scrabble) 
 	{
 		//New popup to enter two players' names
 		Stage enterName = new Stage();
@@ -97,153 +92,106 @@ public class UI
    			p2.setName(getName2.getText());
 
    			enterName.hide();
-   			loops(p1, p2, mainStage);
+   			//loops(p1, p2, scrabble);
+   			promptMove(showBoard(scrabble), p1, scrabble);
     	});           
 	}
 	
-	public void loops(Player p1, Player p2, Stage mainStage) 
+	
+	
+	/*public void loops(Player p1, Player p2, Scrabble scrabble) 
 	{
-		//Scanner scanner = new Scanner(System.in);
-		//while(!endOfGame)
-		
-		//loops() is meant to implement the above while loop
-		//for loop is just a placeholder for now, needs to be implemented properly
 		for(int i = 0; i < 8; i++) 
 		{
-			if(player1Turn) 
+			if(scrabble.isPlayer1Turn().get()) 
 			{
-				promptMove(mainStage, showBoard(), p1 /*scanner*/);
-				player1Turn = false;
+				promptMove(showBoard(scrabble), p1);
+				scrabble.setPlayer1TurnFalse();
 			}
 			
 			else 
 			{
-				promptMove(mainStage, showBoard(), p2 /*scanner*/);
-				player1Turn = true; 
+				promptMove(showBoard(scrabble), p2);
+				scrabble.setPlayer1TurnTrue(); 
 			}
 		}
-		//scanner.close();
-	}
+	}*/
 	
-	public void promptMove(Stage mainStage, VBox vbox, Player player/*, Scanner scanner*/) 
+	public void promptMove(VBox vbox, Player player, Scrabble scrabble) 
 	{
-		Text makeAMove = new Text(player.getName() + " make a move");
-		
-		Button endTurn = new Button();
-		endTurn.setText("End Turn");
-		
-		GridPane playerTiles = new GridPane();
-			
-		vbox.getChildren().addAll(makeAMove, endTurn, playerTiles);
-		for(int i = 0; i < 7; i++) 
+		if(scrabble.isEndOfGame()) 
 		{
-			StackPane stack = new StackPane();
-			Text text = new Text("");
-			Tile t = player.getFrame().getTiles().get(i);
-			
-			text = new Text(Character.toString(t.getLetter()));
-			t.setFill(Color.YELLOW);
-			stack.getChildren().addAll(t, text);
-			playerTiles.add(stack, i, 0);
+			//System.out.println("There are no more tiles");
+			Platform.exit();
 		}
 		
-		playerTiles.setAlignment(Pos.CENTER);
-		playerTiles.setGridLinesVisible(true);
-		
-		mainStage.getScene().setRoot(vbox);
-		
-		/*endTurn.setOnMouseClicked(e -> 
+		else 
 		{
-			String command = scanner.next();
-			switch(command) 
-			{
-				case "QUIT":
-					endOfGame = true;
-					break;
-					
-				case "PASS":
-					break;
-					
-				case "HELP":
-					break;
-					
-				case "EXCHANGE":
-					break;	
-					
-				default:
-					break;
-			}
-		});
-		
-		
-		//mainStage.show();		*/
-	}
-	
-	public VBox showBoard() 
-	{
-		VBox root = new VBox(8);
-		root.setPadding(new Insets(20, 20, 20, 20));
-		GridPane grid = new GridPane();
-		
-		root.getChildren().addAll(grid);
-		
-		
-		for (int r = 0; r < Board.BOARD_SIZE; r++) 
-		{
-			for (int c = 0; c < Board.BOARD_SIZE; c++) 
+			Text makeAMove = new Text(player.getName() + " make a move");
+			
+			Button makeMove = new Button();
+			makeMove.setText("Make Move");
+			
+			GridPane playerTiles = new GridPane();
+				
+			vbox.getChildren().addAll(makeAMove, makeMove, playerTiles);
+			for(int i = 0; i < 7; i++) 
 			{
 				StackPane stack = new StackPane();
 				Text text = new Text("");
-				squares[r][c] = new Square(Board.LETTER_MULTIPLIER[r][c],Board.WORD_MULTIPLIER[r][c], c, r);
+				Tile t = player.getFrame().getTiles().get(i);
 				
-				if (squares[r][c].isOccupied()) 
-				{
-					text = new Text(Character.toString(squares[r][c].getTile().getLetter()));
-				}
-		        
-				else if(squares[r][c].isDoubleLetter() && squares[r][c].isDoubleWord()) 
-				{
-					text = new Text("@@");
-					squares[r][c].setFill(Color.GREEN);
-				}
-				
-		        else if(squares[r][c].isDoubleLetter()) 
-		        {
-		        	text = new Text("DL");
-					squares[r][c].setFill(Color.BLUE);
-		        }
-		        
-		        else if(squares[r][c].isTripleLetter())
-		        {
-		        	text = new Text("TL");
-					squares[r][c].setFill(Color.RED);
-		        }
-		        
-		        else if(squares[r][c].isDoubleWord()) 
-		        {
-		        	text = new Text("DW");
-					squares[r][c].setFill(Color.BLUEVIOLET);
-		        }
-		        
-		        else if(squares[r][c].isTripleWord()) 
-		        {
-		        	text = new Text("TW");
-					squares[r][c].setFill(Color.CRIMSON);
-		        }
-		        
-		        else 
-		        {
-		        	squares[r][c].setFill(Color.WHITE);
-		        }
-				
-				stack.getChildren().addAll(squares[r][c], text);
-				grid.add(stack, r, c);
+				text = new Text(Character.toString(t.getLetter()));
+				t.setFill(Color.YELLOW);
+				stack.getChildren().addAll(t, text);
+				playerTiles.add(stack, i, 0);
 			}
+			
+			playerTiles.setAlignment(Pos.CENTER);
+			playerTiles.setGridLinesVisible(true);
+			
+			mainStage.getScene().setRoot(vbox);
+			
+				
+			makeMove.setOnMouseClicked(e -> scrabble.makeAMove(player));
 		}
+	}
+	
+	public VBox showBoard(Scrabble scrabble) 
+	{
+		VBox root = new VBox(8);
+		root.setPrefSize(600, 600);
+		root.setPadding(new Insets(20, 20, 20, 20));
 		
-		grid.setAlignment(Pos.CENTER);
-		grid.setGridLinesVisible(true);
+		root.getChildren().add(scrabble.getBoard().getGrid());
 		
 		return root;
 	}
+	
+	@Override
+	public void start(Stage primaryStage) throws Exception
+	{	
+		Scrabble scrabble = new Scrabble(this);
+		scrabble.initializePlayers();
+		
+		Button startGame = new Button();		
+		startGame.setText("Start Game");
+		
+		VBox initialPopup = showBoard(scrabble);
+		initialPopup.getChildren().add(startGame);
+		
+		Scene scene = new Scene(initialPopup);
+		mainStage = primaryStage;
+		mainStage.setTitle("Scrabble");
+		mainStage.setScene(scene);
+		mainStage.show(); 
+		
+		startGame.setOnMouseClicked(e -> 
+		{
+			initialPopup.getChildren().remove(startGame);
+			setPlayerNames(scrabble.getP1(), scrabble.getP2(), scrabble);
+			//showBoard(scrabble).getChildren().remove(startGame);
+			//setPlayerNames(p1, p2, mainStage);
+		});
+    }
 }

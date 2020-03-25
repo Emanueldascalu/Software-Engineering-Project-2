@@ -1,5 +1,11 @@
 package application;
 
+import javafx.geometry.Pos;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+
 public class Board 
 {
 
@@ -7,7 +13,7 @@ public class Board
 	public static final int BOARD_CENTRE = 7;
 
 	public static final int[][] LETTER_MULTIPLIER =
-		{ {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		{ {1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1},
 		  {1, 1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 1},
 		  {1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1},
 		  {2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2},
@@ -21,7 +27,7 @@ public class Board
 	      {2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2},
 		  {1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1},
 		  {1, 1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 1},
-		  {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} };
+		  {1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1} };
 	
 	public static final int[][] WORD_MULTIPLIER =
 		  { {3, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 3},
@@ -50,68 +56,83 @@ public class Board
 	private Square[][] squares;
 	private int checkCode;
 	private int numPlays;
+	private GridPane board;
+	
+	public GridPane getGrid() {return board;}
 	
 	Board() 
 	{
+		board = new GridPane();
+		for(int i = 1; i <= BOARD_SIZE; i++) 
+		{
+			Text across = new Text(Character.toString((char) (int) ('A' + i - 1)));
+			board.add(across, 0, i);
+		}
+		
+		for(int i = 1; i <= BOARD_SIZE; i++) 
+		{
+			Text down = new Text(Integer.toString(i));
+			board.add(down, i, 0);
+		}
+		
 		squares = new Square[BOARD_SIZE][BOARD_SIZE];
-		for (int r=0; r<BOARD_SIZE; r++)  
+		for (int r = 0; r < BOARD_SIZE; r++) 
 		{
-			for (int c=0; c<BOARD_SIZE; c++)   
+			for (int c = 0; c < BOARD_SIZE; c++) 
 			{
-				squares[r][c] = new Square(LETTER_MULTIPLIER[r][c],WORD_MULTIPLIER[r][c], c , r);
-			}
-		}
-		numPlays = 0;
-	}	
-
-	public void display () 
-	{
-		System.out.print("    ");
-		for (int c = 0; c< BOARD_SIZE; c++) 
-		{
-			System.out.printf("%c ",(char) ((int) 'A' + c));
-		}
-		System.out.println();
-		for (int r = 0; r< BOARD_SIZE; r++) 
-		{
-			System.out.printf("%2d  ", r+1);
-			for (int c = 0; c< BOARD_SIZE; c++) 
-			{
+				StackPane stack = new StackPane();
+				Text text = new Text("");
+				squares[r][c] = new Square(LETTER_MULTIPLIER[r][c], WORD_MULTIPLIER[r][c]);
+				
 				if (squares[r][c].isOccupied()) 
 				{
-					System.out.printf("%c ",squares[r][c].getTile().getLetter());
+					text = new Text(Character.toString(squares[r][c].getTile().getLetter()));
+				}
+		        
+				else if(squares[r][c].isDoubleLetter() && squares[r][c].isDoubleWord()) 
+				{
+					text = new Text("@@");
+					squares[r][c].setFill(Color.GREEN);
 				}
 				
-				else 
-				{
-					if (squares[r][c].isDoubleLetter()) 
-					{
-						System.out.print("dl");
-					} 
-					
-					else if (squares[r][c].isTripleLetter()) 
-					{
-						System.out.print("tl");
-					} 
-					
-					else if (squares[r][c].isDoubleWord()) 
-					{
-						System.out.print("dw");
-					} 
-					
-					else if (squares[r][c].isTripleWord()) 
-					{
-						System.out.print("tw");
-					} 
-					
-					else 
-					{
-						System.out.print("  ");
-					}
-				}
+		        else if(squares[r][c].isDoubleLetter()) 
+		        {
+		        	text = new Text("DL");
+					squares[r][c].setFill(Color.BLUE);
+		        }
+		        
+		        else if(squares[r][c].isTripleLetter())
+		        {
+		        	text = new Text("TL");
+					squares[r][c].setFill(Color.RED);
+		        }
+		        
+		        else if(squares[r][c].isDoubleWord()) 
+		        {
+		        	text = new Text("DW");
+					squares[r][c].setFill(Color.BLUEVIOLET);
+		        }
+		        
+		        else if(squares[r][c].isTripleWord()) 
+		        {
+		        	text = new Text("TW");
+					squares[r][c].setFill(Color.CRIMSON);
+		        }
+		        
+		        else 
+		        {
+		        	squares[r][c].setFill(Color.WHITE);
+		        }
+				
+				stack.getChildren().addAll(squares[r][c], text);
+				board.add(stack, c + 1, r + 1);
 			}
-			System.out.printf("  %2d\n", r+1);
 		}
+		
+		board.setAlignment(Pos.CENTER);
+		board.setGridLinesVisible(true);
+		
+		numPlays = 0;
 	}
 	
 	public boolean isLegal(Frame frame, Word word) 
