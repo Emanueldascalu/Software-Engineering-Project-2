@@ -5,6 +5,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+//By Alphabet Inc. :
+
+	//Emanuel Dascalu, 18729365
+
+	//Pranchal Narang, 18339361 
+	//The github account is lakesh narang
+
+	//Taranpreet Singh, 18203372
+
 public class Tile extends Rectangle{
 
 	private static final int tile_size = 30;

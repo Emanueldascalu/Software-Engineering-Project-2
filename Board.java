@@ -2,9 +2,18 @@ package application;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+
+//By Alphabet Inc. :
+
+	//Emanuel Dascalu, 18729365
+
+	//Pranchal Narang, 18339361 
+	//The github account is lakesh narang
+
+	//Taranpreet Singh, 18203372
+
+/*An example of a word command: A1.A.HELLO instead of A1 A HELLO*/
 
 public class Board 
 {
@@ -20,7 +29,7 @@ public class Board
 		  {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		  {1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1},
 		  {1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1},
-		  {1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1},
+		  {1, 1, 1, 2, 1, 1, 1, 5, 1, 1, 1, 2, 1, 1, 1},
 		  {1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1},
 		  {1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1},
 		  {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -37,7 +46,7 @@ public class Board
 			{1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{3, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 3},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1},
@@ -75,12 +84,10 @@ public class Board
 			boardUi.add(down, i, 0);
 		}
 		
-		//squares = new Square[BOARD_SIZE][BOARD_SIZE];
 		for (int r = 0; r < BOARD_SIZE; r++) 
 		{
 			for (int c = 0; c < BOARD_SIZE; c++) 
 			{
-				//squares[r][c] = new Square(LETTER_MULTIPLIER[r][c],WORD_MULTIPLIER[r][c]);
 				if(squares[r][c].isOccupied()) 
 				{
 					boardUi.add(squares[r][c].getTile().getTileUi(), c + 1, r + 1);
@@ -90,60 +97,6 @@ public class Board
 				{
 					boardUi.add(squares[r][c].getSquareUi(), c + 1, r + 1);
 				}
-				/*StackPane stack = new StackPane();
-				Text text = new Text("");
-				squares[r][c] = new Square(LETTER_MULTIPLIER[r][c], WORD_MULTIPLIER[r][c]);
-				
-				if (squares[r][c].isOccupied()) 
-				{
-					Tile t = squares[r][c].getTile();
-					t.setFill(Color.YELLOW);
-					text = new Text(Character.toString(squares[r][c].getTile().getLetter()));
-					
-					stack.getChildren().addAll(t, text);
-				}
-		        
-				else 
-				{
-					if(squares[r][c].isDoubleLetter() && squares[r][c].isDoubleWord()) 
-					{
-						text = new Text("@@");
-						squares[r][c].setFill(Color.GREEN);
-					}
-					
-			        else if(squares[r][c].isDoubleLetter()) 
-			        {
-			        	text = new Text("DL");
-						squares[r][c].setFill(Color.BLUE);
-			        }
-			        
-			        else if(squares[r][c].isTripleLetter())
-			        {
-			        	text = new Text("TL");
-						squares[r][c].setFill(Color.RED);
-			        }
-			        
-			        else if(squares[r][c].isDoubleWord()) 
-			        {
-			        	text = new Text("DW");
-						squares[r][c].setFill(Color.BLUEVIOLET);
-			        }
-			        
-			        else if(squares[r][c].isTripleWord()) 
-			        {
-			        	text = new Text("TW");
-						squares[r][c].setFill(Color.CRIMSON);
-			        }
-			        
-			        else 
-			        {
-			        	squares[r][c].setFill(Color.WHITE);
-			        }
-					
-					stack.getChildren().addAll(squares[r][c], text);
-				}
-				
-				board.add(stack, c + 1, r + 1);*/
 			}
 		}
 		
@@ -154,8 +107,10 @@ public class Board
 	Board() 
 	{
 		squares = new Square[BOARD_SIZE][BOARD_SIZE];
-		for (int r=0; r<BOARD_SIZE; r++)  {
-			for (int c=0; c<BOARD_SIZE; c++)   {
+		for (int r=0; r<BOARD_SIZE; r++)  
+		{
+			for (int c=0; c<BOARD_SIZE; c++)   
+			{
 				squares[r][c] = new Square(LETTER_MULTIPLIER[r][c],WORD_MULTIPLIER[r][c]);
 			}
 		}
@@ -176,7 +131,7 @@ public class Board
 		{
 			isLegal = false;
 			checkCode = WORD_INCORRECT_FIRST_PLAY;
-			System.out.println(checkCode/* + " " + word.getLetters()*/);
+			System.out.println(checkCode);
 		}
 		// check for word out of bounds
 		if (isLegal && ((word.isHorizontal() && word.getLastColumn()>= BOARD_SIZE) ||
@@ -266,28 +221,50 @@ public class Board
 	};
 
 	// place precondition: isLegal is true
-	public void place(Frame frame, Word word) 
+	public void place(Player player, Word word) 
 	{
+		
+		int playerScore = 0;
+		int wordM = 1;
+		
 		int r = word.getFirstRow();
 		int c = word.getFirstColumn();
 		for (int i=0; i<word.getLength(); i++) 
 		{
-			//StackPane stack = new StackPane();
-			//Text text = new Text("");
-			if (!squares[r][c].isOccupied()) 
+			if(!squares[r][c].isOccupied()) 
 			{
 				char letter = word.getLetter(i);
-				Tile tile = frame.getTile(letter);
+				Tile tile = player.getFrame().getTile(letter);
 				
 				squares[r][c].add(tile);
-				frame.remove(tile);
-	
-				//text = new Text(Character.toString(tile.getLetter()));
-				//tile.setFill(Color.YELLOW);
-				//stack.getChildren().addAll(tile, text);
-				//board.getChildren().remove(c + 1, r + 1);
-				//board.add(stack, c + 1, r + 1);
-				//board.setGridLinesVisible(true);
+				player.getFrame().remove(tile);
+				
+				if(squares[r][c].isDoubleLetter()) 
+				{
+					playerScore += 2 * tile.getValue();
+				}
+				
+				else if(squares[r][c].isDoubleWord() || squares[r][c].isCenter()) 
+				{
+					wordM *= 2;
+					playerScore += tile.getValue();
+				}
+				
+				else if(squares[r][c].isTripleLetter()) 
+				{
+					 playerScore += 3 * tile.getValue();
+				}
+				
+				else if(squares[r][c].isTripleWord()) 
+				{
+					wordM *= 3;
+					playerScore += tile.getValue();
+				}
+				
+				else 
+				{
+					playerScore += tile.getValue();
+				}
 			}
 			
 			if (word.isHorizontal()) 
@@ -300,6 +277,10 @@ public class Board
 				r++;
 			}
 		}
+		
+		playerScore *= wordM;
+		player.increaseScore(playerScore);
+		
 		setBoardUi(squares);
 		numPlays++;
 	}

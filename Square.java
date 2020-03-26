@@ -5,10 +5,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+//By Alphabet Inc. :
+
+	//Emanuel Dascalu, 18729365
+
+	//Pranchal Narang, 18339361 
+	//The github account is lakesh narang
+
+	//Taranpreet Singh, 18203372
+
 public class Square extends Rectangle
 {
 	private static final int square_size = 30;
-    private int letterMuliplier;
+    private int letterMultiplier;
     private int wordMultiplier;
     private boolean isOccupied;
     
@@ -21,9 +30,8 @@ public class Square extends Rectangle
     	squareUi = new StackPane();
     	Text text = new Text("");
     	
-    	if(isDoubleLetter() && isDoubleWord()) 
+    	if(isCenter()) 
 		{
-			text = new Text("@@");
 			this.setFill(Color.GREEN);
 		}
 		
@@ -67,31 +75,36 @@ public class Square extends Rectangle
     	setHeight(square_size);
     	
         isOccupied = false;
-        this.letterMuliplier = letterMultiplier;
+        this.letterMultiplier = letterMultiplier;
         this.wordMultiplier = wordMultiplier;
         
         setSquareUi();
     }
     
     
-    public int getLetterMuliplier() 
+    public int getletterMultiplier() 
     {
-        return letterMuliplier;
+        return letterMultiplier;
     }
 
     public int getWordMultiplier() 
     {
         return wordMultiplier;
     }
-
+    
+    public boolean isCenter() 
+    {
+    	return (letterMultiplier == 5 && wordMultiplier == 5);
+    }
+    
     public boolean isDoubleLetter() 
     {
-        return letterMuliplier == 2;
+        return letterMultiplier == 2;
     }
 
     public boolean isTripleLetter() 
     {
-        return letterMuliplier == 3;
+        return letterMultiplier == 3;
     }
 
     public boolean isDoubleWord() 

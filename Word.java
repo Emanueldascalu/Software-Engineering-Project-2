@@ -1,5 +1,14 @@
 package application;
 
+//By Alphabet Inc. :
+
+	//Emanuel Dascalu, 18729365
+
+	//Pranchal Narang, 18339361 
+	//The github account is lakesh narang
+
+	//Taranpreet Singh, 18203372
+
 public class Word {
 
 	private int row, column; // first letter position

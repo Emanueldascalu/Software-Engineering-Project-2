@@ -5,10 +5,17 @@ import java.util.Scanner;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
+
+//By Alphabet Inc. :
+
+	//Emanuel Dascalu, 18729365
+
+	//Pranchal Narang, 18339361 
+	//The github account is lakesh narang
+
+	//Taranpreet Singh, 18203372
+
+/*An example of a word command: A1.A.HELLO instead of A1 A HELLO*/
 
 public class Frame 
 {
@@ -22,7 +29,6 @@ public class Frame
 	public void setFrameUi() 
 	{
 		frameUi = new GridPane();
-		Text text = new Text("");
 		for(int i = 0; i < size(); i++) 
 		{
 			frameUi.add(returnTile(i).getTileUi(), i, 0);
@@ -136,7 +142,6 @@ public class Frame
 	{
 		
 		int numGiven;
-		//int index;
 		if (numRequested > pool.size()) 
 		{
 			numGiven = pool.size();

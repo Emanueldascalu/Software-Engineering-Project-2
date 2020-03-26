@@ -1,32 +1,28 @@
 package application;
 
-//import java.util.Scanner;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.scene.paint.Color;
-import java.util.concurrent.CountDownLatch;
-import javafx.scene.control.Label;
+
+//By Alphabet Inc. :
+
+	//Emanuel Dascalu, 18729365
+
+	//Pranchal Narang, 18339361 
+	//The github account is lakesh narang
+
+	//Taranpreet Singh, 18203372
+
+/*An example of a word command: A1.A.HELLO instead of A1 A HELLO*/
 
 public class UI extends Application
 {		
@@ -100,38 +96,21 @@ public class UI extends Application
 	{
 		if(scrabble.isEndOfGame()) 
 		{
-			//System.out.println("There are no more tiles");
 			Platform.exit();
 		}
 		
 		else 
 		{
-			Text makeAMove = new Text(player.getName() + " make a move");
+			Text makeAMove = new Text(player.getName() + " make a move." + "   " + player.getName() + 
+					" Score: " + player.getScore());
 			
 			Button makeMove = new Button();
 			makeMove.setText("Make Move");
-			
-			//GridPane playerTiles = new GridPane();
 				
 			vbox.getChildren().addAll(makeAMove, makeMove, player.getFrame().getFrameUi());
-			/*for(int i = 0; i < 7; i++) 
-			{
-				StackPane stack = new StackPane();
-				Text text = new Text("");
-				Tile t = player.getFrame().returnTile(i);
-				
-				text = new Text(Character.toString(t.getLetter()));
-				t.setFill(Color.YELLOW);
-				stack.getChildren().addAll(t, text);
-				playerTiles.add(stack, i, 0);
-			}
-			
-			playerTiles.setAlignment(Pos.CENTER);
-			playerTiles.setGridLinesVisible(true);*/
 			
 			mainStage.getScene().setRoot(vbox);
 			
-				
 			makeMove.setOnMouseClicked(e -> scrabble.makeAMove(player));
 		}
 	}

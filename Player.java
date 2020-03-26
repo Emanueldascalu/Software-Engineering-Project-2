@@ -1,20 +1,19 @@
-//By Alphabet Inc. : 
-//Emanuel Dascalu, 18729365 
-//Pranchal Narang, 18339361  
-//Taranpreet Singh, 18203372
+package application;
 
+//By Alphabet Inc. :
+
+	//Emanuel Dascalu, 18729365
+
+	//Pranchal Narang, 18339361 
+	//The github account is lakesh narang
+
+	//Taranpreet Singh, 18203372
 
 public class Player
 {
 	private String name;
 	private int score = 0;
 	private Frame frame = new Frame();
-
-	public Player(String n, Frame f)//creates a player
-	{
-		setName(n);
-		setFrame(f);
-	}
 
 	//setters and getters for player score, name & frame
 	public void setScore(int s) 
@@ -45,14 +44,6 @@ public class Player
 	public Frame getFrame() 
 	{
 		return frame;
-	}
-
-	//allows all player data to be removed for new start
-	public void dataReset() 
-	{
-		setName("");
-		setScore(0);	
-		frame.resetFrame();
 	}
 	
 	public void increaseScore(int addedPoints) //adds points scored to current score

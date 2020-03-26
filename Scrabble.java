@@ -1,27 +1,22 @@
 package application;
 
 import java.util.*;
-
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 
-public class Scrabble //extends Application
+//By Alphabet Inc. :
+
+	//Emanuel Dascalu, 18729365
+
+	//Pranchal Narang, 18339361 
+	//The github account is lakesh narang
+
+	//Taranpreet Singh, 18203372
+
+/*An example of a word command: A1.A.HELLO instead of A1 A HELLO*/
+
+public class Scrabble
 {	
-	/*To do:
-	 * Implement UI versions of frame and board properly
-	 * Make promptMove and MakeMove one function
-	 * Implement scoring*/
 	private Pool pool = new Pool();
 	private Board board = new Board();
 	private Scanner scanner = new Scanner(System.in);
@@ -69,12 +64,6 @@ public class Scrabble //extends Application
 	public Scrabble(UI ui) 
 	{
 		this.ui = ui;
-		/*player1Turn.addListener((obs, oldValue, newValue) -> {
-            if(!newValue) 
-            {
-                ui.promptMove(ui.showBoard(this), p2, this);
-            }
-        });*/
 	}
 	
 	public void initializePlayers() 
@@ -106,6 +95,8 @@ public class Scrabble //extends Application
 				break;
 			
 			case "HELP":
+				System.out.println("Enter PASS, QUIT or EXCHANGE.");
+				System.out.println("Example of command placing a word: A1.1.HELLO");
 				break;
 			
 			case "EXCHANGE":
@@ -128,7 +119,7 @@ public class Scrabble //extends Application
 				
 				if(isLegalCommand(s, player) && word != null) 
 				{
-					board.place(player.getFrame(), word);
+					board.place(player, word);
 					player.getFrame().refill(pool);
 					player.getFrame().setFrameUi();
 				}
@@ -207,4 +198,3 @@ public class Scrabble //extends Application
 		return legal;
 	}
 }
-
