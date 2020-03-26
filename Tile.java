@@ -15,7 +15,18 @@ public class Tile extends Rectangle{
     private boolean blank;
     private char letter;
     private int value;
-
+    
+    private StackPane tileUi;
+    
+    public StackPane getTileUi() {return tileUi;}
+    
+    public void setUiTile() 
+    {
+    	tileUi = new StackPane();
+    	Text t = new Text(Character.toString(getLetter()));
+    	this.setFill(Color.YELLOW);
+    	tileUi.getChildren().addAll(this, t);
+    }
     // Tile precondition: must be uppercase letter
     Tile(char letter) 
     {
@@ -34,6 +45,8 @@ public class Tile extends Rectangle{
             this.letter = letter;
             this.value = TILE_VALUE[(int) letter - (int) 'A'];
         }
+        
+        setUiTile();
     }
 
     public boolean isBlank() 

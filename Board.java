@@ -56,82 +56,111 @@ public class Board
 	private Square[][] squares;
 	private int checkCode;
 	private int numPlays;
-	private GridPane board;
+	private GridPane boardUi;
 	
-	public GridPane getGrid() {return board;}
+	public GridPane getBoardUi() {return boardUi;}
 	
-	Board() 
+	public void setBoardUi(Square[][] squares) 
 	{
-		board = new GridPane();
+		boardUi = new GridPane();
 		for(int i = 1; i <= BOARD_SIZE; i++) 
 		{
 			Text across = new Text(Character.toString((char) (int) ('A' + i - 1)));
-			board.add(across, 0, i);
+			boardUi.add(across, 0, i);
 		}
 		
 		for(int i = 1; i <= BOARD_SIZE; i++) 
 		{
-			Text down = new Text(Integer.toString(i));
-			board.add(down, i, 0);
+			Text down = new Text(Integer.toString(i - 1));
+			boardUi.add(down, i, 0);
 		}
 		
-		squares = new Square[BOARD_SIZE][BOARD_SIZE];
+		//squares = new Square[BOARD_SIZE][BOARD_SIZE];
 		for (int r = 0; r < BOARD_SIZE; r++) 
 		{
 			for (int c = 0; c < BOARD_SIZE; c++) 
 			{
-				StackPane stack = new StackPane();
+				//squares[r][c] = new Square(LETTER_MULTIPLIER[r][c],WORD_MULTIPLIER[r][c]);
+				if(squares[r][c].isOccupied()) 
+				{
+					boardUi.add(squares[r][c].getTile().getTileUi(), c + 1, r + 1);
+				}
+				
+				else 
+				{
+					boardUi.add(squares[r][c].getSquareUi(), c + 1, r + 1);
+				}
+				/*StackPane stack = new StackPane();
 				Text text = new Text("");
 				squares[r][c] = new Square(LETTER_MULTIPLIER[r][c], WORD_MULTIPLIER[r][c]);
 				
 				if (squares[r][c].isOccupied()) 
 				{
+					Tile t = squares[r][c].getTile();
+					t.setFill(Color.YELLOW);
 					text = new Text(Character.toString(squares[r][c].getTile().getLetter()));
+					
+					stack.getChildren().addAll(t, text);
 				}
 		        
-				else if(squares[r][c].isDoubleLetter() && squares[r][c].isDoubleWord()) 
+				else 
 				{
-					text = new Text("@@");
-					squares[r][c].setFill(Color.GREEN);
+					if(squares[r][c].isDoubleLetter() && squares[r][c].isDoubleWord()) 
+					{
+						text = new Text("@@");
+						squares[r][c].setFill(Color.GREEN);
+					}
+					
+			        else if(squares[r][c].isDoubleLetter()) 
+			        {
+			        	text = new Text("DL");
+						squares[r][c].setFill(Color.BLUE);
+			        }
+			        
+			        else if(squares[r][c].isTripleLetter())
+			        {
+			        	text = new Text("TL");
+						squares[r][c].setFill(Color.RED);
+			        }
+			        
+			        else if(squares[r][c].isDoubleWord()) 
+			        {
+			        	text = new Text("DW");
+						squares[r][c].setFill(Color.BLUEVIOLET);
+			        }
+			        
+			        else if(squares[r][c].isTripleWord()) 
+			        {
+			        	text = new Text("TW");
+						squares[r][c].setFill(Color.CRIMSON);
+			        }
+			        
+			        else 
+			        {
+			        	squares[r][c].setFill(Color.WHITE);
+			        }
+					
+					stack.getChildren().addAll(squares[r][c], text);
 				}
 				
-		        else if(squares[r][c].isDoubleLetter()) 
-		        {
-		        	text = new Text("DL");
-					squares[r][c].setFill(Color.BLUE);
-		        }
-		        
-		        else if(squares[r][c].isTripleLetter())
-		        {
-		        	text = new Text("TL");
-					squares[r][c].setFill(Color.RED);
-		        }
-		        
-		        else if(squares[r][c].isDoubleWord()) 
-		        {
-		        	text = new Text("DW");
-					squares[r][c].setFill(Color.BLUEVIOLET);
-		        }
-		        
-		        else if(squares[r][c].isTripleWord()) 
-		        {
-		        	text = new Text("TW");
-					squares[r][c].setFill(Color.CRIMSON);
-		        }
-		        
-		        else 
-		        {
-		        	squares[r][c].setFill(Color.WHITE);
-		        }
-				
-				stack.getChildren().addAll(squares[r][c], text);
-				board.add(stack, c + 1, r + 1);
+				board.add(stack, c + 1, r + 1);*/
 			}
 		}
 		
-		board.setAlignment(Pos.CENTER);
-		board.setGridLinesVisible(true);
+		boardUi.setAlignment(Pos.CENTER);
+		boardUi.setGridLinesVisible(true);
+	}
+	
+	Board() 
+	{
+		squares = new Square[BOARD_SIZE][BOARD_SIZE];
+		for (int r=0; r<BOARD_SIZE; r++)  {
+			for (int c=0; c<BOARD_SIZE; c++)   {
+				squares[r][c] = new Square(LETTER_MULTIPLIER[r][c],WORD_MULTIPLIER[r][c]);
+			}
+		}
 		
+		setBoardUi(squares);
 		numPlays = 0;
 	}
 	
@@ -147,6 +176,7 @@ public class Board
 		{
 			isLegal = false;
 			checkCode = WORD_INCORRECT_FIRST_PLAY;
+			System.out.println(checkCode/* + " " + word.getLetters()*/);
 		}
 		// check for word out of bounds
 		if (isLegal && ((word.isHorizontal() && word.getLastColumn()>= BOARD_SIZE) ||
@@ -154,6 +184,7 @@ public class Board
 		{
 			isLegal = false;
 			checkCode = WORD_OUT_OF_BOUNDS;
+			System.out.println(checkCode);
 		}
 		// check that letters in the word do not clash with those on the board
 		String lettersPlaced = "";
@@ -166,6 +197,7 @@ public class Board
 				{
 					isLegal = false;
 					checkCode = WORD_LETTER_CLASH;
+					System.out.println(checkCode);
 				} 
 				
 				else if (!squares[r][c].isOccupied()) 
@@ -189,12 +221,14 @@ public class Board
 		{
 			isLegal = false;
 			checkCode = WORD_NO_LETTER_PLACED;
+			System.out.println(checkCode);
 		}
 		// check that the letters placed are in the frame
 		if (isLegal && !frame.isAvailable(lettersPlaced)) 
 		{
 			isLegal = false;
 			checkCode = WORD_LETTER_NOT_IN_FRAME;
+			System.out.println(checkCode);
 		}
 		// check that the letters placed connect with the letters on the board
 		if (isLegal && numPlays!=0) 
@@ -219,6 +253,7 @@ public class Board
 			{
 				isLegal = false;
 				checkCode = WORD_NO_CONNECTION;
+				System.out.println(checkCode);
 			}
 		}
 		return isLegal;
@@ -237,12 +272,22 @@ public class Board
 		int c = word.getFirstColumn();
 		for (int i=0; i<word.getLength(); i++) 
 		{
+			//StackPane stack = new StackPane();
+			//Text text = new Text("");
 			if (!squares[r][c].isOccupied()) 
 			{
 				char letter = word.getLetter(i);
 				Tile tile = frame.getTile(letter);
+				
 				squares[r][c].add(tile);
 				frame.remove(tile);
+	
+				//text = new Text(Character.toString(tile.getLetter()));
+				//tile.setFill(Color.YELLOW);
+				//stack.getChildren().addAll(tile, text);
+				//board.getChildren().remove(c + 1, r + 1);
+				//board.add(stack, c + 1, r + 1);
+				//board.setGridLinesVisible(true);
 			}
 			
 			if (word.isHorizontal()) 
@@ -255,6 +300,7 @@ public class Board
 				r++;
 			}
 		}
+		setBoardUi(squares);
 		numPlays++;
 	}
 

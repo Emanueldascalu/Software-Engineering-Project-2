@@ -32,7 +32,7 @@ public class UI extends Application
 {		
 	private Stage mainStage;
 	
-	
+	public Stage getMainStage() {return mainStage;}
 	
 	public void setPlayerNames(Player p1, Player p2, Scrabble scrabble) 
 	{
@@ -92,30 +92,9 @@ public class UI extends Application
    			p2.setName(getName2.getText());
 
    			enterName.hide();
-   			//loops(p1, p2, scrabble);
    			promptMove(showBoard(scrabble), p1, scrabble);
     	});           
 	}
-	
-	
-	
-	/*public void loops(Player p1, Player p2, Scrabble scrabble) 
-	{
-		for(int i = 0; i < 8; i++) 
-		{
-			if(scrabble.isPlayer1Turn().get()) 
-			{
-				promptMove(showBoard(scrabble), p1);
-				scrabble.setPlayer1TurnFalse();
-			}
-			
-			else 
-			{
-				promptMove(showBoard(scrabble), p2);
-				scrabble.setPlayer1TurnTrue(); 
-			}
-		}
-	}*/
 	
 	public void promptMove(VBox vbox, Player player, Scrabble scrabble) 
 	{
@@ -132,14 +111,14 @@ public class UI extends Application
 			Button makeMove = new Button();
 			makeMove.setText("Make Move");
 			
-			GridPane playerTiles = new GridPane();
+			//GridPane playerTiles = new GridPane();
 				
-			vbox.getChildren().addAll(makeAMove, makeMove, playerTiles);
-			for(int i = 0; i < 7; i++) 
+			vbox.getChildren().addAll(makeAMove, makeMove, player.getFrame().getFrameUi());
+			/*for(int i = 0; i < 7; i++) 
 			{
 				StackPane stack = new StackPane();
 				Text text = new Text("");
-				Tile t = player.getFrame().getTiles().get(i);
+				Tile t = player.getFrame().returnTile(i);
 				
 				text = new Text(Character.toString(t.getLetter()));
 				t.setFill(Color.YELLOW);
@@ -148,7 +127,7 @@ public class UI extends Application
 			}
 			
 			playerTiles.setAlignment(Pos.CENTER);
-			playerTiles.setGridLinesVisible(true);
+			playerTiles.setGridLinesVisible(true);*/
 			
 			mainStage.getScene().setRoot(vbox);
 			
@@ -157,13 +136,14 @@ public class UI extends Application
 		}
 	}
 	
+
 	public VBox showBoard(Scrabble scrabble) 
 	{
 		VBox root = new VBox(8);
 		root.setPrefSize(600, 600);
 		root.setPadding(new Insets(20, 20, 20, 20));
 		
-		root.getChildren().add(scrabble.getBoard().getGrid());
+		root.getChildren().add(scrabble.getBoard().getBoardUi());
 		
 		return root;
 	}
@@ -190,8 +170,6 @@ public class UI extends Application
 		{
 			initialPopup.getChildren().remove(startGame);
 			setPlayerNames(scrabble.getP1(), scrabble.getP2(), scrabble);
-			//showBoard(scrabble).getChildren().remove(startGame);
-			//setPlayerNames(p1, p2, mainStage);
 		});
     }
 }

@@ -1,6 +1,10 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import javafx.geometry.Pos;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -11,6 +15,22 @@ public class Frame
 
 	private static final int MAX_TILES = 7;
 	private ArrayList<Tile> tiles;
+	private GridPane frameUi;
+	
+	public GridPane getFrameUi() {return frameUi;}
+	
+	public void setFrameUi() 
+	{
+		frameUi = new GridPane();
+		Text text = new Text("");
+		for(int i = 0; i < size(); i++) 
+		{
+			frameUi.add(returnTile(i).getTileUi(), i, 0);
+		}
+		
+		frameUi.setAlignment(Pos.CENTER);
+		frameUi.setGridLinesVisible(true);
+	}
 
 	Frame() 
 	{
@@ -75,13 +95,13 @@ public class Frame
 	}
 
 	// getTile precondition: isAvailable(letters) is true
-	/*public Tile getTile(Character letter) 
+	public Tile getTile(Character letter) 
 	{
 		int index = tiles.indexOf(new Tile(letter));
 		return tiles.get(index);
-	}*/
+	}
 	
-	public Tile getTile(int i) 
+	public Tile returnTile(int i) 
 	{
 		return tiles.get(i);
 	}
@@ -99,18 +119,65 @@ public class Frame
 		tiles.addAll(draw);
 	}
 	
-	public void exchange(Pool pool /*int numTilesToBeRemoved*/) 
+	public boolean isLetterInFrame(char c)
 	{
-		//Tile toBeExchanged = new Tile(tiles.);
-		//System.out.println(isFull());
-		int currentSize = size();
-		for (int i = 0; i < currentSize; i++) 
+		for(int i = 0; i < size(); i++) 
 		{
-			remove(getTile(0));
+			if(c == returnTile(i).getLetter()) 
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void exchange(Pool pool, int numRequested, Scanner scanner) 
+	{
+		
+		int numGiven;
+		//int index;
+		if (numRequested > pool.size()) 
+		{
+			numGiven = pool.size();
+		} 
+		
+		else 
+		{
+			numGiven = numRequested;
+		}
+		
+		for (int i = 0; i < numGiven; i++) 
+		{
+			System.out.println("Choose a tile you want to remove");
+			String toBeExchanged = scanner.next();
+
+			if(toBeExchanged.length() != 1) 
+			{
+				System.out.println("Input must be a character\nTry again");
+				i--;
+			}
+			
+			else 
+			{
+				char removedLetter = toBeExchanged.toCharArray()[0];
+				if(isLetterInFrame(removedLetter)) 
+				{
+					pool.getPool().add(getTile(removedLetter));
+					remove(getTile(removedLetter));
+					System.out.println(removedLetter + " was removed from your frame and placed in the pool");
+				}
+				
+				else
+				{
+					System.out.println("Tile not on your frame\nTry again");
+					i--;
+				}
+			}
 		}
 		
 		refill(pool);
-		
+		setFrameUi();
 	}
 	// test setter
 	public void setTiles(String letters) 

@@ -19,9 +19,9 @@ import javafx.scene.layout.VBox;
 public class Scrabble //extends Application
 {	
 	/*To do:
-	 * instead of loop, call promptMove() for p1
-	 * set end Turn to assign player1Turn the opposite value
-	 * Figure out how to get input from console*/
+	 * Implement UI versions of frame and board properly
+	 * Make promptMove and MakeMove one function
+	 * Implement scoring*/
 	private Pool pool = new Pool();
 	private Board board = new Board();
 	private Scanner scanner = new Scanner(System.in);
@@ -58,7 +58,7 @@ public class Scrabble //extends Application
 	
 	public boolean areThereAnyTilesLeft() 
 	{
-		if(pool.size() == 0 && p1.getFrame().size() == 0 && p2.getFrame().size() == 0) 
+		if(pool.size() == 0 && (p1.getFrame().size() == 0 || p2.getFrame().size() == 0)) 
 		{
 			return false;
 		}
@@ -86,6 +86,9 @@ public class Scrabble //extends Application
 		
 		p1.getFrame().refill(pool);
 		p2.getFrame().refill(pool);
+		p1.getFrame().setFrameUi();
+		p2.getFrame().setFrameUi();
+		
 	}
 	
 	public void makeAMove(Player player) 
@@ -98,7 +101,6 @@ public class Scrabble //extends Application
 			case "QUIT":
 				setEndOfGame();
 				break;
-
 				
 			case "PASS":
 				break;
@@ -112,18 +114,23 @@ public class Scrabble //extends Application
 				
 				else 
 				{
-					player.getFrame().exchange(pool);
+					System.out.println("How many tiles do you want to exchange?");
+					int numGiven = scanner.nextInt();
+					
+					player.getFrame().exchange(pool, numGiven, scanner);
 					System.out.println(pool.size());
 				}
 				
 				break;
 				
 			default:
-				String[] s = command.split(" ", 0);
+				String[] s = command.split("\\.");
 				
 				if(isLegalCommand(s, player) && word != null) 
 				{
 					board.place(player.getFrame(), word);
+					player.getFrame().refill(pool);
+					player.getFrame().setFrameUi();
 				}
 				
 				
@@ -150,7 +157,8 @@ public class Scrabble //extends Application
 		if(s.length != 3) 
 		{
 			legal = false;
-			//System.out.println("Wrong number of strings");
+			System.out.println("Wrong number of strings");
+			return legal;
 		}
 		
 		else 
@@ -162,7 +170,7 @@ public class Scrabble //extends Application
 			if((firstLetterPosition.length() != 2 && firstLetterPosition.length() != 3) || acrossOrDown.length() != 1) 
 			{
 				legal = false;
-				//System.out.println("1st string is invalid or 2nd string is invalid");
+				System.out.println("1st string is invalid or 2nd string is invalid");
 				return legal;
 			}
 			
@@ -170,26 +178,28 @@ public class Scrabble //extends Application
 				|| firstLetterPosition.toCharArray()[1] < '1' || firstLetterPosition.toCharArray()[1] > '9') 
 			{
 				legal = false;
-				//System.out.println("1st string is invalid");
+				System.out.println("1st string is invalid");
 				return legal;
 			}
 			
-			if(acrossOrDown.toCharArray()[0] != firstLetterPosition.toCharArray()[0]) 
+			if(acrossOrDown.toCharArray()[0] != firstLetterPosition.toCharArray()[0] 
+					&& acrossOrDown.toCharArray()[0] != firstLetterPosition.toCharArray()[1]) 
 			{
 				legal = false;
-				//System.out.println("2nd string is invalid");
+				System.out.println("2nd string is invalid");
 				return legal;
 			}
 			
-			int row = ((int) (firstLetterPosition.toCharArray()[0])) + 1;
-			int column = (int) (firstLetterPosition.toCharArray()[1]);
+			int row = ((int) (firstLetterPosition.toCharArray()[0])) - 65;
+			int column = (int) (firstLetterPosition.toCharArray()[1]) - 48;
 			boolean across = (acrossOrDown.toCharArray()[0] == firstLetterPosition.toCharArray()[0]);
+			
 			
 			word = new Word(row, column, across, actualWord);
 			if(!board.isLegal(player.getFrame(), word)) 
 			{
 				legal = false;
-				//System.out.println("3rd string is invalid");
+				System.out.println("3rd string is invalid");
 				return legal;
 			}
 		}

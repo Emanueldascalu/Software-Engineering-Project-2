@@ -11,7 +11,54 @@ public class Square extends Rectangle
     private int letterMuliplier;
     private int wordMultiplier;
     private boolean isOccupied;
-    //StackPane stack = new StackPane();
+    
+    private StackPane squareUi = new StackPane();
+    
+    public StackPane getSquareUi() {return squareUi;}
+    
+    public void setSquareUi() 
+    {
+    	squareUi = new StackPane();
+    	Text text = new Text("");
+    	
+    	if(isDoubleLetter() && isDoubleWord()) 
+		{
+			text = new Text("@@");
+			this.setFill(Color.GREEN);
+		}
+		
+        else if(isDoubleLetter()) 
+        {
+        	text = new Text("DL");
+        	this.setFill(Color.BLUE);
+        }
+        
+        else if(isTripleLetter())
+        {
+        	text = new Text("TL");
+        	this.setFill(Color.RED);
+        }
+        
+        else if(isDoubleWord()) 
+        {
+        	text = new Text("DW");
+        	this.setFill(Color.BLUEVIOLET);
+        }
+        
+        else if(isTripleWord()) 
+        {
+        	text = new Text("TW");
+        	this.setFill(Color.CRIMSON);
+        }
+        
+        else 
+        {
+        	this.setFill(Color.WHITE);
+        }
+    	
+    	squareUi.getChildren().addAll(this, text);
+    }
+    
     private Tile tile;
 
     Square(int letterMultiplier, int wordMultiplier) 
@@ -22,8 +69,11 @@ public class Square extends Rectangle
         isOccupied = false;
         this.letterMuliplier = letterMultiplier;
         this.wordMultiplier = wordMultiplier;
+        
+        setSquareUi();
     }
-
+    
+    
     public int getLetterMuliplier() 
     {
         return letterMuliplier;
