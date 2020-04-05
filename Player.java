@@ -1,58 +1,54 @@
-package application;
+import java.util.ArrayList;
 
-//By Alphabet Inc. :
+public class Player {
 
-	//Emanuel Dascalu, 18729365
+    private int id;
+    private String name;
+    private int score;
+    private Frame frame;
 
-	//Pranchal Narang, 18339361 
-	//The github account is lakesh narang
+    Player(int id)  {
+        this.id = id;
+        name = "";
+        score = 0;
+        frame = new Frame();
+    }
 
-	//Taranpreet Singh, 18203372
+    public int getPrintableId() {
+        return id+1;
+    }
 
-public class Player
-{
-	private String name;
-	private int score = 0;
-	private Frame frame = new Frame();
+    public void setName(String text) {
+        name = text;
+    }
 
-	//setters and getters for player score, name & frame
-	public void setScore(int s) 
-	{
-		score = s;
-	}
-	
-	public void setName(String n) 
-	{
-		name = n;
-	}
-	
-	public void setFrame(Frame f) 
-	{
-		frame = f;
-	}
-	
-	public String getName() 
-	{
-		return name;
-	}
-	
-	public int getScore() 
-	{
-		return score;
-	}
-	
-	public Frame getFrame() 
-	{
-		return frame;
-	}
-	
-	public void increaseScore(int addedPoints) //adds points scored to current score
-	{
-		score += addedPoints;
-	}
-	
-	public void displayName() //displays player name
-	{
-		System.out.println(getName());
-	}
+    public String getName() {
+        return name;
+    }
+
+    public void addPoints(int increment) {
+        score = score + increment;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public Frame getFrame() {
+        return frame;
+    }
+
+    public void adjustScore() {
+        int unused = 0;
+        ArrayList<Tile> tiles = frame.getTiles();
+        for (Tile tile : tiles) {
+            unused = unused + tile.getValue();
+        }
+        score = score - unused;
+    }
+
+    public String toString() {
+        return "Player " + getPrintableId();
+    }
+
 }
