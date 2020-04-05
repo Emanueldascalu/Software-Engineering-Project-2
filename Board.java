@@ -152,7 +152,7 @@ public class Board {
     public void place(Frame frame, Word word) {
         points = 0;
         boolean frameWasFull = frame.isFull();
-        int wordMultipler = 1;
+        int wordMultiplier = 1;
         int r = word.getFirstRow();
         int c = word.getFirstColumn();
         for (int i=0; i<word.getLength(); i++) {
@@ -162,24 +162,15 @@ public class Board {
                 squares[r][c].add(tile);
                 frame.removeTile(tile);
                 points = points + tile.getValue() * squares[r][c].getLetterMuliplier();
-                wordMultipler = wordMultipler * squares[r][c].getWordMultiplier();
+                wordMultiplier = wordMultiplier * squares[r][c].getWordMultiplier();
             }
-            //working on removing invalid word
-//            if (squares[r][c].isOccupied()) {
-//                char letter = word.getLetter(i);
-//                Tile tile = frame.getTile(letter);
-//                squares[r][c].add(tile);
-//                frame.removeTile(tile);
-//                points = points + tile.getValue() * squares[r][c].getLetterMuliplier();
-//                wordMultipler = wordMultipler * squares[r][c].getWordMultiplier();
-//            }
             if (word.isHorizontal()) {
                 c++;
             } else {
                 r++;
             }
         }
-        points = points * wordMultipler;
+        points = points * wordMultiplier;
         if (frameWasFull && frame.isEmpty()) {
             points = points + BONUS;
         }
