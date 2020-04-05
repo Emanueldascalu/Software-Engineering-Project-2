@@ -22,6 +22,7 @@ public class UI {
     Button[][] displaySquares = new Button[Board.BOARD_SIZE][Board.BOARD_SIZE];
     Scrabble scrabble;
     boolean gameOver;
+    int count = 1;
 
     UI() {
         scrabble = new Scrabble();
@@ -157,13 +158,18 @@ public class UI {
             printPoolSize();
         }
         else if (!gameOver && (command.matches("CHALLENGE( )+([A-Z_]){1,7}") || command.matches("C( )+([A-Z_]){1,7}"))) {
-            if(isValidWord(input)){
-                printLine("Word is valid");
+            if(count==1){
+                printLine("Cannot challenge yet");
+                count++;
             }
-            else{
-                printLine("Word is not valid");//prints valid or invalid but need to make it remove the word and reduce score
+            else {
+                if (isValidWord(input)) {
+                    printLine("Word is valid");
+                } else {
+                    printLine("Word is not valid");//prints valid or invalid but need to make it remove the word and reduce score
 //                printLine("Enter invalid word location, direction, followed by spaces corresponding to word length e.g. for cat you could have: H8 A   [3 spaces]");
 //                scrabble.turnOver();
+                }
             }
         }
         else if (!gameOver && (command.matches("[A-O](\\d){1,2}( )+[A,D]( )+([A-Z_]){1,15}"))) {
