@@ -1,5 +1,3 @@
-package application;
-
 //By Alphabet Inc. :
 
 	//Emanuel Dascalu, 18729365
