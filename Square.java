@@ -1,3 +1,5 @@
+package application;
+
 public class Square {
 
     private int letterMuliplier;
@@ -48,5 +50,12 @@ public class Square {
     public Tile getTile() {
         return tile;
     }
-
+    
+    public Tile removeTile() 
+    {
+    	Tile t = tile;
+    	tile = null;
+    	isOccupied = false;
+    	return t;
+    }
 }

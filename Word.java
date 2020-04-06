@@ -1,20 +1,12 @@
-//By Alphabet Inc. :
-
-	//Emanuel Dascalu, 18729365
-
-	//Pranchal Narang, 18339361 
-	//The github account is lakesh narang
-
-	//Taranpreet Singh, 18203372
+package application;
 
 public class Word {
 
 	private int row, column; // first letter position
 	private boolean isHorizontal;  // true = horizontal, false = vertical
 	private String letters;
-	
-	Word(int row, int column, boolean isHorizontal, String letters) 
-	{
+
+	Word(int row, int column, boolean isHorizontal, String letters) {
 		this.row = row;
 		this.column = column;
 		this.isHorizontal = isHorizontal;
@@ -22,75 +14,56 @@ public class Word {
 	}
 
 	// getRow pre-condition: isHorizontal is true
-	public int getRow() 
-	{
+	public int getRow() {
 		return row;
 	}
 
-	// getColumn pre-condition: isHorizonal is false
-	public int getColumn() 
-	{
+	// getColumn pre-condition: isHorizonal is flase
+	public int getColumn() {
 		return column;
 	}
 
-	public int getFirstRow() 
-	{
+	public int getFirstRow() {
 		return row;
 	}
 
-	public int getLastRow() 
-	{
-		if (isHorizontal) 
-		{
+	public int getLastRow() {
+		if (isHorizontal) {
 			return row;
-		} 
-		
-		else 
-		{
+		} else {
 			return row + letters.length() - 1;
 		}
 	}
 
-	public int getFirstColumn() 
-	{
+	public int getFirstColumn() {
 		return column;
 	}
 
-	public int getLastColumn() 
-	{
-		if (!isHorizontal) 
-		{
+	public int getLastColumn() {
+		if (!isHorizontal) {
 			return column;
-		} 
-		
-		else 
-		{
+		} else {
 			return column + letters.length() - 1;
 		}
 	}
 
-	public String getLetters() 
-	{
+	public String getLetters() {
 		return letters;
 	}
-	
-	public char getLetter(int i) 
-	{
+
+	public char getLetter(int i) {
 		return letters.charAt(i);
 	}
-	
-	public int getLength() 
-	{
+
+	public int getLength() {
 		return letters.length();
 	}
-	
-	public boolean isHorizontal() 
-	{
+
+	public boolean isHorizontal() {
 		return isHorizontal;
 	}
 
-	public boolean isVertical () 
-	{
+	public boolean isVertical () {
 		return !isHorizontal;
 	}
 

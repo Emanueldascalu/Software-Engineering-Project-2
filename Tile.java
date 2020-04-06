@@ -1,3 +1,5 @@
+package application;
+
 public class Tile {
 
     private static final int BLANK_VALUE = 0;
@@ -53,3 +55,4 @@ public class Tile {
     }
 
 }
+
