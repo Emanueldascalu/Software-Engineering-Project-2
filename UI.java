@@ -43,19 +43,20 @@ public class UI {
         infoArea.setPrefColumnCount(15);
         infoArea.setWrapText(true);
 
-        commandField.setPromptText("Enter command...");
-        commandField.setPrefColumnCount(15);
-        commandField.setOnAction(e -> {
-            if (!gameOver) {
-                String input = commandField.getText();
-                infoArea.appendText("> " + input + "\n");
-                commandField.clear();
-                processInput(input);
-            }
-            if (!gameOver) {
-                printPrompt();
-            }
-        });
+            commandField.setPromptText("Enter command...");
+            commandField.setPrefColumnCount(15);
+            commandField.setOnAction(e -> {
+                if (!gameOver) {
+                    String input = commandField.getText();
+                    infoArea.appendText("> " + input + "\n");
+                    commandField.clear();
+                    processInput(input);
+                }
+                if (!gameOver) {
+                    printPrompt();
+                }
+            });
+
 
         // rows are numbered from zero at the top
         // columns are numbers from zero at the left
@@ -82,7 +83,7 @@ public class UI {
         primaryStage.show();
 
         printGameStart();
-        printPrompt();
+            printPrompt();
     }
 
     void refreshBoard() {
@@ -165,14 +166,22 @@ public class UI {
             else {
                 if (isValidWord(input)) {
                     printLine("Word is valid");
+                    scrabble.turnOver();
                 } else {
-                    printLine("Word is not valid");//prints valid or invalid but need to make it remove the word and reduce score
-//                printLine("Enter invalid word location, direction, followed by spaces corresponding to word length e.g. for cat you could have: H8 A   [3 spaces]");
-//                scrabble.turnOver();
+                    printLine("Word is not valid");
+
+//                    scrabble.turnOver();
+//                    int points = scrabble.getBoard().getPoints();
+//                    currentPlayer.reduceScore(points);
+//                    scrabble.scorePlay();
+//                    scrabble.turnOver();
                 }
             }
         }
         else if (!gameOver && (command.matches("[A-O](\\d){1,2}( )+[A,D]( )+([A-Z_]){1,15}"))) {
+            if(count==1){
+                count++;
+            }
             Word word = parsePlay(command);
             if (!scrabble.getBoard().isLegalPlay(currentPlayer.getFrame(),word)) {
                 printPlayError(scrabble.getBoard().getErrorCode());
@@ -280,8 +289,6 @@ public class UI {
                     if (scrabble.isZeroScorePlaysOverLimit()) {
                         printZeroScorePlaysOverLimit();
                         gameOver = true;
-                    } else {
-                        scrabble.turnOver();
                     }
                     return true;
                 }
