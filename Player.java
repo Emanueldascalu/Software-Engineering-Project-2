@@ -32,10 +32,6 @@ public class Player {
         score += increment;
     }
 
-    public void reduceScore(int decrement){
-        score-=decrement;
-    }
-
     public int getScore() {
         return score;
     }
