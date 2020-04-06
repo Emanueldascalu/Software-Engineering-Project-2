@@ -199,12 +199,16 @@ public class Board {
 				frame.removeTile(tile);
 				points = points + tile.getValue() * squares[r][c].getLetterMuliplier();
 				wordMultipler = wordMultipler * squares[r][c].getWordMultiplier();
+				
+				if (word.isHorizontal() ) {
+					positionsOfPlayedTiles.add(c);
+				} else {
+					positionsOfPlayedTiles.add(r);
+				}
 			}
-			if (word.isHorizontal()) {
-				positionsOfPlayedTiles.add(c);
+			if (word.isHorizontal() ) {
 				c++;
 			} else {
-				positionsOfPlayedTiles.add(r);
 				r++;
 			}
 		}

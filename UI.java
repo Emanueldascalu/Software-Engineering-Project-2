@@ -22,6 +22,7 @@ public class UI {
     Button[][] displaySquares = new Button[Board.BOARD_SIZE][Board.BOARD_SIZE];
     Scrabble scrabble;
     boolean gameOver;
+    String[] PlayerNames = {"Player 1", "Player 2"};
 
     UI() {
         scrabble = new Scrabble();
@@ -79,7 +80,9 @@ public class UI {
         primaryStage.show();
 
         printGameStart();
+        //printPoolSize();
         printPrompt();
+        
     }
 
     void refreshBoard() {
@@ -130,6 +133,7 @@ public class UI {
     // Input methods
 
     private void processInput(String input) {
+    	//printPoolSize();
         String command = input.trim().toUpperCase();
         Player currentPlayer = scrabble.getCurrentPlayer();
         if (command.equals("QUIT") || command.equals("Q")) {
@@ -147,7 +151,9 @@ public class UI {
         } else if (!gameOver && (command.equals("SCORE") || command.equals("S"))) {
             printScores();
         } else if (!gameOver && (command.equals("POOL") || command.equals("O"))) {
-            printPoolSize();
+            printPoolSize(); 
+        }  else if(!gameOver && (command.matches("NAME( )+([A-Z_]){1,15}"))) { 
+        	changePlayerName(command); 
         } else if(!gameOver && (command.equals("CHALLENGE") || command.equals("C"))) {
         	if(scrabble.getBoard().getNumPlays() == 0) 
         	{
@@ -161,13 +167,14 @@ public class UI {
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
-	        	
+	        	//if(isValidWord(scrabble.getBoard().getLastWordPlaced().getLetters()))
 	        	if(!scrabble.getTrie().search(scrabble.getBoard().getLastWordPlaced().getLetters())) 
 	        	{
 	        		scrabble.turnOver();
 	        		currentPlayer = scrabble.getCurrentPlayer();
 	    			currentPlayer.getFrame().moveTilesToGoInPool(scrabble.getPool());
 	    			currentPlayer.getFrame().getTiles().addAll(scrabble.getBoard().nullifyPlay());
+	    			currentPlayer.removePoints(scrabble.getBoard().getPoints());
 	    			scrabble.turnOver();
 	    			currentPlayer = scrabble.getCurrentPlayer();
 	    			if(scrabble.getBoard().getNumPlays() == 1) 
@@ -176,10 +183,15 @@ public class UI {
 	    			}
 	    			refreshBoard();
 	        		print("Challenge successful. Previous play nullified.\n");
+	        		//printScores();
 	        	}
 	        	
-	        	else
+	        	else 
+	        	{
 	        		print("Unsuccessful challenge.\n");
+	        	}
+	        	
+	        	scrabble.getBoard().resetPositionsList();
         	}
         } else if (!gameOver && (command.matches("[A-O](\\d){1,2}( )+[A,D]( )+([A-Z_]){1,15}"))) {
             Word word = parsePlay(command);
@@ -193,6 +205,7 @@ public class UI {
                 printPoints(points);
                 currentPlayer.addPoints(points);
                 currentPlayer.getFrame().refill(scrabble.getPool());
+                //currentPlayer.getFrame().setTilesToGoInPool();
                 scrabble.scorePlay();
                 scrabble.turnOver();
                 if (currentPlayer.getFrame().isEmpty() && currentPlayer.getFrame().isEmpty()) {
@@ -206,7 +219,7 @@ public class UI {
                 printExchangeError(currentPlayer.getFrame().getErrorCode());
             } else {
                 currentPlayer.getFrame().exchange(scrabble.getPool(),letters);
-                currentPlayer.getFrame().resetTilesToGoInPool();
+                currentPlayer.getFrame().resetDraw();
                 printTiles();
                 scrabble.zeroScorePlay();
                 if (scrabble.isZeroScorePlaysOverLimit()) {
@@ -252,34 +265,43 @@ public class UI {
     private void printGameStart() {
         printLine("WELCOME TO SCRABBLE");
     }
-
-    private void printTiles() {
-        printLine(scrabble.getCurrentPlayer() + " has the following tiles:");
-        for (Tile tile : scrabble.getCurrentPlayer().getFrame().getTiles()) {
-            print(tile + " ");
-        }
-        printLine("");
+    
+    private void changePlayerName(String command)
+    { 
+    	String parts[]=command.split("( )+"); 
+    	PlayerNames[scrabble.getCurrentPlayerId()]=parts[1]; 
+    	printLine(scrabble.getCurrentPlayer()+ ": " + PlayerNames[scrabble.getCurrentPlayerId()]); 
+    	//scrabble.turnOver();
     }
 
-    private void printPrompt() {
-        printLine(scrabble.getCurrentPlayer() + "'s turn:");
-        printTiles();
-    }
+    private void printTiles() 
+    { 
+    	printLine(PlayerNames[scrabble.getCurrentPlayerId()] + " has the following tiles:"); 
+    	for (Tile tile : scrabble.getCurrentPlayer().getFrame().getTiles()) { 
+    		print(tile + " "); 
+    	} 
+    	printLine(""); 
+    } 
 
-    private void printPoints(int points) {
-        printLine(scrabble.getCurrentPlayer() + " scored " + points + " points.");
-    }
+    private void printPrompt() { 
+    	printLine(PlayerNames[scrabble.getCurrentPlayerId()] + "'s turn:"); printTiles(); 
+    } 
+    
+    private void printPoints(int points) { 
+    	printLine(PlayerNames[scrabble.getCurrentPlayerId()] + " scored " + points + " points."); 
+    } 
 
     private void printPoolSize() {
         printLine("Pool has " + scrabble.getPool().size() + " tiles");
     }
-
-    private void printHelp() {
-        printLine("Command options: Q (quit), P (pass), X (exchange), S (scores), O (pool) or play");
-        printLine("For an exchange, enter the letters that you wish to exchange. E.g. X ABC");
-        printLine("For a play, enter the grid reference of the first letter, and A (across) or D (down)m and the word optionally including any letters already on the board. E.g. A1 D HELLO");
-        printLine("For blank use underscore");
-    }
+    
+    private void printHelp() { 
+    	printLine("Command options: Q (quit), P (pass), X (exchange), S (scores), O (pool), C(challenge), NAME(name) or play"); 
+    	printLine("For an exchange, enter the letters that you wish to exchange. E.g. X ABC"); 
+    	printLine("For a play, enter the grid reference of the first letter, and A (across) or D (down) and the word optionally including any letters already on the board. E.g. A1 D HELLO"); 
+    	printLine("For challenge enter word being challenged. E.g. C TORN"); 
+    	printLine("For blank use underscore"); 
+    } 
 
     private void printPlayError(int errCode) {
         String message = "";
@@ -328,12 +350,15 @@ public class UI {
     private void printZeroScorePlaysOverLimit() {
         printLine("The number of zero score plays is over the limit.");
     }
+    
+    private void printScores() { 
+    	int i=0; 
+    	for (Player player : scrabble.getPlayers()) { 
+    		printLine(PlayerNames[i] + " has " + player.getScore() + " points."); 
+    		i++; 
+    	} 
+    } 
 
-    private void printScores() {
-        for (Player player : scrabble.getPlayers()) {
-            printLine(player + " has " + player.getScore() + " points.");
-        }
-    }
 
     private void printWinner() {
         int maxScore = -1000;

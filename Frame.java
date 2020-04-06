@@ -9,12 +9,12 @@ public class Frame {
 	public static final int EXCHANGE_NOT_ENOUGH_IN_POOL = 1;
 
 	private ArrayList<Tile> tiles;
-	private ArrayList<Tile> tilesToGoInPool;
+	private ArrayList<Tile> draw;
 	int errorCode;
 
 	Frame() {
-		tiles = new ArrayList<>();
-		tilesToGoInPool = new ArrayList<>();
+		tiles = new ArrayList<Tile>();
+		draw = new ArrayList<Tile>();
 	}
 
 	public int size() {
@@ -80,36 +80,48 @@ public class Frame {
 		return tiles;
 	}
 	
-	public ArrayList<Tile> getTilesToGoInPool()
+	public void resetDraw() 
 	{
-		return tilesToGoInPool;
-	}
-	
-	public void resetTilesToGoInPool()
-	{
-		int initialSize = tilesToGoInPool.size();
+		int initialSize = draw.size();
 		for(int i = 0; i < initialSize; i++) 
 		{
-			tilesToGoInPool.remove(0);
+			draw.remove(0);
 		}
+	}
+	
+	public boolean isInDraw(Tile t) 
+	{
+		for(int i = 0; i < draw.size(); i++)
+		{
+			if(t == draw.get(i)) 
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public void moveTilesToGoInPool(Pool pool) 
 	{
-		for(int i = 0; i < tilesToGoInPool.size(); i++) 
+		
+		for(int i = 0; i < tiles.size(); i++) 
 		{
-			tiles.remove(tilesToGoInPool.get(i));
+			if(isInDraw(tiles.get(i))) 
+			{
+				tiles.remove(i);
+				i--;
+			}
 		}
 		
-		pool.addTiles(tilesToGoInPool);
-		resetTilesToGoInPool();
+		pool.addTiles(draw);
+		resetDraw();
 	}
 
 	public void refill(Pool pool) {
 		int numTilesToDraw = MAX_TILES - tiles.size();
-		ArrayList<Tile> draw = pool.drawTiles(numTilesToDraw);
+		draw = pool.drawTiles(numTilesToDraw);
 		tiles.addAll(draw);
-		tilesToGoInPool.addAll(draw);
 	}
 
 	public boolean isLegalExchange(Pool pool, String letters) {
@@ -142,5 +154,4 @@ public class Frame {
 	public String toString() {
 		return tiles.toString();
 	}
-
 }

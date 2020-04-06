@@ -92,4 +92,8 @@ public class Scrabble {
 			player.adjustScore();
 		}
 	}
+	
+	public int getCurrentPlayerId() { 
+		return currentPlayerId; } 
+
 }

@@ -31,7 +31,10 @@ public class Player {
 	public void addPoints(int increment) {
 		score = score + increment;
 	}
-
+	
+	public void removePoints(int decrement) {
+		score = score - decrement;
+	}
 	public int getScore() {
 		return score;
 	}
