@@ -27,7 +27,11 @@ public class Player {
     }
 
     public void addPoints(int increment) {
-        score = score + increment;
+        score += increment;
+    }
+
+    public void reduceScore(int decrement){
+        score-=decrement;
     }
 
     public int getScore() {
