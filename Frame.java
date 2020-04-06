@@ -1,5 +1,14 @@
 package application;
 
+//By Alphabet Inc. :	
+
+	//Emanuel Dascalu, 18729365	
+
+	//Pranchal Narang, 18339361 	
+	//The github account is lakesh narang	
+
+	//Taranpreet Singh, 18203372
+
 import java.util.ArrayList;
 
 public class Frame {
@@ -9,7 +18,12 @@ public class Frame {
 	public static final int EXCHANGE_NOT_ENOUGH_IN_POOL = 1;
 
 	private ArrayList<Tile> tiles;
+	
+	/*Tiles drawn from the pool when the refill command is called are stored here. 
+	 * If a player places a word, draws some tiles to get back to 7 and is then successfully challenged
+	 * this variable is needed to return those tiles drawn from the pool back to the pool.*/
 	private ArrayList<Tile> draw;
+	
 	int errorCode;
 
 	Frame() {
@@ -80,6 +94,7 @@ public class Frame {
 		return tiles;
 	}
 	
+	/*Removes all tiles stored in draw*/
 	public void resetDraw() 
 	{
 		int initialSize = draw.size();
@@ -89,6 +104,8 @@ public class Frame {
 		}
 	}
 	
+	/*Checks if a tile in a player's frame is also in the 
+	 * ArrayList of Tiles "draw". */
 	public boolean isInDraw(Tile t) 
 	{
 		for(int i = 0; i < draw.size(); i++)
@@ -102,6 +119,7 @@ public class Frame {
 		return false;
 	}
 	
+	//Moves tiles that are both in the players frame and in draw to the pool
 	public void moveTilesToGoInPool(Pool pool) 
 	{
 		

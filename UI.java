@@ -1,5 +1,14 @@
 package application;
 
+//By Alphabet Inc. :	
+
+	//Emanuel Dascalu, 18729365	
+
+	//Pranchal Narang, 18339361 	
+	//The github account is lakesh narang	
+
+	//Taranpreet Singh, 18203372
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -80,7 +89,8 @@ public class UI {
         primaryStage.show();
 
         printGameStart();
-        //printPoolSize();
+        printPoolSize();
+        printScores();
         printPrompt();
         
     }
@@ -133,7 +143,8 @@ public class UI {
     // Input methods
 
     private void processInput(String input) {
-    	//printPoolSize();
+    	printPoolSize();
+    	printScores();
         String command = input.trim().toUpperCase();
         Player currentPlayer = scrabble.getCurrentPlayer();
         if (command.equals("QUIT") || command.equals("Q")) {
@@ -157,17 +168,24 @@ public class UI {
         } else if(!gameOver && (command.equals("CHALLENGE") || command.equals("C"))) {
         	if(scrabble.getBoard().getNumPlays() == 0) 
         	{
+        		//Can't challenge on the first turn.
         		printLine("Can't challenge now.");
         	}
         	
         	else 
         	{
+        		//Throws exception if the file is not found when trie is being created
 	        	try {
 					scrabble.createTrie(scrabble.getTrie());
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
-	        	//if(isValidWord(scrabble.getBoard().getLastWordPlaced().getLetters()))
+	        	
+	        	/*If the challenged word is not in the dictionary/trie, 
+	        	 * any tiles the player who was challenged drew from the pool are returned to the pool.
+	        	 * The tiles on the board that make up the challenged word are returned to the player's frame.
+	        	 * The player loses all points gained from the play before the challenge
+	        	 * The challenged player also loses their turn since the turnOver method isn't called*/
 	        	if(!scrabble.getTrie().search(scrabble.getBoard().getLastWordPlaced().getLetters())) 
 	        	{
 	        		scrabble.turnOver();
@@ -189,6 +207,8 @@ public class UI {
 	        	else 
 	        	{
 	        		print("Unsuccessful challenge.\n");
+	        		//Since the challenge was unsuccessful the current player loses their turn
+	        		scrabble.turnOver();
 	        	}
 	        	
 	        	scrabble.getBoard().resetPositionsList();
@@ -266,6 +286,7 @@ public class UI {
         printLine("WELCOME TO SCRABBLE");
     }
     
+    //Replaces current player's name (Player 1 or Player 2) with a string
     private void changePlayerName(String command)
     { 
     	String parts[]=command.split("( )+"); 

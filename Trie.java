@@ -1,10 +1,6 @@
 package application;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.sql.Time;
-import java.util.Scanner;
-
+//A trie object is created in Scrabble to store the Dictionary
 public class Trie
 {	
 	private class TrieNode 

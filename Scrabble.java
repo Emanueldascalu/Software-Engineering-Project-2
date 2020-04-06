@@ -1,5 +1,14 @@
 package application;
 
+//By Alphabet Inc. :	
+
+	//Emanuel Dascalu, 18729365	
+
+	//Pranchal Narang, 18339361 	
+	//The github account is lakesh narang	
+
+	//Taranpreet Singh, 18203372
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -15,6 +24,9 @@ public class Scrabble {
 	private ArrayList<Player> players;
 	private int currentPlayerId;
 	private int numZeroScorePlays;
+	
+	/*Used to store the dictionary in a trie for faster lookup 
+	 * than a regular string comparison search algorithm*/
 	private Trie trie;
 	
 
@@ -36,6 +48,7 @@ public class Scrabble {
 	
 	public Trie getTrie() {return trie;}
 	
+	//Inserts every word from the dictionary into the trie
 	public void createTrie(Trie trie) throws FileNotFoundException
 	{
 		//Trie trie = new Trie();

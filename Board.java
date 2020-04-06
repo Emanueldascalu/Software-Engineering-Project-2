@@ -1,5 +1,14 @@
 package application;
 
+//By Alphabet Inc. :	
+
+	//Emanuel Dascalu, 18729365	
+
+	//Pranchal Narang, 18339361 	
+	//The github account is lakesh narang	
+
+	//Taranpreet Singh, 18203372
+
 import java.util.ArrayList;
 
 public class Board {
@@ -54,8 +63,22 @@ public class Board {
 	private int errorCode;
 	private int numPlays;
 	private int points;
+	
+	//Following three variables are used in the Challenge command
+	
+	//We assumed that challenges can only be made on words played one turn before 
+	/*Positions on the board of the tiles of the previously placed word are placed here 
+	 * to be used if a challenge is successful and all tiles from the previous play 
+	 * have to be removed.
+	 * It takes column values if the challenged word is horizontal.
+	 * It takes row values if the challenged word is vertical.*/
 	private ArrayList<Integer> positionsOfPlayedTiles;
+	
+	/*If challenged word is horizontal it takes the row value 
+	 * of the first letter's position. If vertical, it takes the column value*/
 	private int positionOfFirstLetter;
+	
+	/*It stores the last placed word to be accessed for challenges*/
 	private Word lastWordPlaced;
 	
 	public Word getLastWordPlaced() {return lastWordPlaced;}
@@ -82,6 +105,7 @@ public class Board {
 	public boolean isLegalPlay(Frame frame, Word word) {
 		boolean isLegal = true;
 		
+		// check if word is only one letter long
 		if(word.getLetters().length() == 1) 
 		{
 			isLegal = false;
@@ -183,12 +207,8 @@ public class Board {
 		
 		if (word.isHorizontal()) {
 			positionOfFirstLetter = r;
-			//positionsOfPlayedTiles.add(c);
-			//c++;
 		} else {
 			positionOfFirstLetter = c;
-			//positionsOfPlayedTiles.add(r);
-			//r++;
 		}
 		
 		for (int i=0; i<word.getLength(); i++) {
@@ -237,6 +257,8 @@ public class Board {
 		return positionOfFirstLetter;
 	}
 	
+	/*Called once a challenge is over and
+	 * removes all the positions of the tiles of the challenged word*/  
 	public void resetPositionsList()
 	{
 		int initialSize = positionsOfPlayedTiles.size();
@@ -247,6 +269,10 @@ public class Board {
 		}
 	}
 	
+	/*Called on a successful challenge and removes all tiles
+	 * from the board that were played on the previous play.
+	 * Also returns an ArrayList of the Tiles to be removed from the board
+	 * and placed back on a player's frame*/
 	public ArrayList<Tile> nullifyPlay() 
 	{
 		ArrayList<Tile> moveFromBoardToFrame = new ArrayList<Tile>();

@@ -32,6 +32,7 @@ public class Player {
 		score = score + increment;
 	}
 	
+	//Called when a successful challenge is made
 	public void removePoints(int decrement) {
 		score = score - decrement;
 	}

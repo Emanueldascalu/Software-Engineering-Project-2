@@ -9,7 +9,7 @@ public class Tile {
     private char letter;
     private int value;
 
-    // Tile precondition: must be uppercase letter
+    // Tile precondition: must be upper-case letter
     Tile(char letter) {
         if (letter == '_') {
             this.blank = true;

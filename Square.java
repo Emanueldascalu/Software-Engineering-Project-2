@@ -51,6 +51,7 @@ public class Square {
         return tile;
     }
     
+    //Called when a challenge is successful and tiles need to be removed from the board
     public Tile removeTile() 
     {
     	Tile t = tile;
