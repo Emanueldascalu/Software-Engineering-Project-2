@@ -40,7 +40,7 @@ public class Scrabble {
 	{
 		//Trie trie = new Trie();
 
-		File f = new File("C:\\Users\\Emanuel\\eclipse-workspace\\MyJavaFX\\src\\application\\dictionary.txt");
+		File f = new File("C:\\Users\\Emanuel\\Desktop\\Collins Scrabble Words (2019).txt");
 		Scanner sc = new Scanner(f);
 		
 		while(sc.hasNext()) 

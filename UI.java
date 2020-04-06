@@ -1,3 +1,5 @@
+package application;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -8,9 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class UI {
@@ -22,14 +22,11 @@ public class UI {
     Button[][] displaySquares = new Button[Board.BOARD_SIZE][Board.BOARD_SIZE];
     Scrabble scrabble;
     boolean gameOver;
-    int count = 1;
 
     UI() {
         scrabble = new Scrabble();
         gameOver = false;
     }
-
-    // Stage display methods
 
     public void displayStage(Stage primaryStage) {
         primaryStage.setTitle("Scrabble");
@@ -43,25 +40,24 @@ public class UI {
         infoArea.setPrefColumnCount(15);
         infoArea.setWrapText(true);
 
-            commandField.setPromptText("Enter command...");
-            commandField.setPrefColumnCount(15);
-            commandField.setOnAction(e -> {
-                if (!gameOver) {
-                    String input = commandField.getText();
-                    infoArea.appendText("> " + input + "\n");
-                    commandField.clear();
-                    processInput(input);
-                }
-                if (!gameOver) {
-                    printPrompt();
-                }
-            });
-
+        commandField.setPromptText("Enter command...");
+        commandField.setPrefColumnCount(15);
+        commandField.setOnAction(e -> {
+            if (!gameOver) {
+                String input = commandField.getText();
+                infoArea.appendText("> " + input + "\n");
+                commandField.clear();
+                processInput(input);
+            }
+            if (!gameOver) {
+                printPrompt();
+            }
+        });
 
         // rows are numbered from zero at the top
         // columns are numbers from zero at the left
         boardPane.setGridLinesVisible(true);
-        int squareSize = 50;
+        int squareSize = 40;
         for (int r = 0; r < Board.BOARD_SIZE; r++) {
             boardPane.getColumnConstraints().add(new ColumnConstraints(squareSize));
             boardPane.getRowConstraints().add(new RowConstraints(squareSize));
@@ -83,7 +79,7 @@ public class UI {
         primaryStage.show();
 
         printGameStart();
-            printPrompt();
+        printPrompt();
     }
 
     void refreshBoard() {
@@ -138,56 +134,60 @@ public class UI {
         Player currentPlayer = scrabble.getCurrentPlayer();
         if (command.equals("QUIT") || command.equals("Q")) {
             System.exit(0);
-        }
-        else if (!gameOver && (command.equals("PASS") || command.equals("P"))) {
+        } else if (!gameOver && (command.equals("PASS") || command.equals("P"))) {
             scrabble.zeroScorePlay();
             if (scrabble.isZeroScorePlaysOverLimit()) {
                 printZeroScorePlaysOverLimit();
                 gameOver = true;
-            }
-            else {
+            } else {
                 scrabble.turnOver();
             }
-        }
-        else if (!gameOver && (command.equals("HELP") || command.equals("H"))) {
+        } else if (!gameOver && (command.equals("HELP") || command.equals("H"))) {
             printHelp();
-        }
-        else if (!gameOver && (command.equals("SCORE") || command.equals("S"))) {
+        } else if (!gameOver && (command.equals("SCORE") || command.equals("S"))) {
             printScores();
-        }
-        else if (!gameOver && (command.equals("POOL") || command.equals("O"))) {
+        } else if (!gameOver && (command.equals("POOL") || command.equals("O"))) {
             printPoolSize();
-        }
-        else if (!gameOver && (command.matches("CHALLENGE( )+([A-Z_]){1,7}") || command.matches("C( )+([A-Z_]){1,7}"))) {
-            if(count==1){
-                printLine("Cannot challenge yet");
-                count++;
-            }
-            else {
-                if (isValidWord(input)) {
-                    printLine("Word is valid");
-                    scrabble.turnOver();
-                } else {
-                    printLine("Word is not valid");
-
-//                    scrabble.turnOver();
-//                    int points = scrabble.getBoard().getPoints();
-//                    currentPlayer.reduceScore(points);
-//                    scrabble.scorePlay();
-//                    scrabble.turnOver();
-                }
-            }
-        }
-        else if (!gameOver && (command.matches("[A-O](\\d){1,2}( )+[A,D]( )+([A-Z_]){1,15}"))) {
-            if(count==1){
-                count++;
-            }
+        } else if(!gameOver && (command.equals("CHALLENGE") || command.equals("C"))) {
+        	if(scrabble.getBoard().getNumPlays() == 0) 
+        	{
+        		printLine("Can't challenge now.");
+        	}
+        	
+        	else 
+        	{
+	        	try {
+					scrabble.createTrie(scrabble.getTrie());
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+	        	
+	        	if(!scrabble.getTrie().search(scrabble.getBoard().getLastWordPlaced().getLetters())) 
+	        	{
+	        		scrabble.turnOver();
+	        		currentPlayer = scrabble.getCurrentPlayer();
+	    			currentPlayer.getFrame().moveTilesToGoInPool(scrabble.getPool());
+	    			currentPlayer.getFrame().getTiles().addAll(scrabble.getBoard().nullifyPlay());
+	    			scrabble.turnOver();
+	    			currentPlayer = scrabble.getCurrentPlayer();
+	    			if(scrabble.getBoard().getNumPlays() == 1) 
+	    			{
+	    				scrabble.getBoard().setNumPlays(0);
+	    			}
+	    			refreshBoard();
+	        		print("Challenge successful. Previous play nullified.\n");
+	        	}
+	        	
+	        	else
+	        		print("Unsuccessful challenge.\n");
+        	}
+        } else if (!gameOver && (command.matches("[A-O](\\d){1,2}( )+[A,D]( )+([A-Z_]){1,15}"))) {
             Word word = parsePlay(command);
             if (!scrabble.getBoard().isLegalPlay(currentPlayer.getFrame(),word)) {
                 printPlayError(scrabble.getBoard().getErrorCode());
-            }
-            else {
+            } else {
                 scrabble.getBoard().place(currentPlayer.getFrame(),word);
+                scrabble.getBoard().setLastWordPlaced(word);
                 refreshBoard();
                 int points = scrabble.getBoard().getPoints();
                 printPoints(points);
@@ -199,14 +199,14 @@ public class UI {
                     gameOver = true;
                 }
             }
-        }
-        else if (!gameOver && (command.matches("EXCHANGE( )+([A-Z_]){1,7}") || command.matches("X( )+([A-Z_]){1,7}"))) {
+        } else if (!gameOver && (command.matches("EXCHANGE( )+([A-Z_]){1,7}") || command.matches("X( )+([A-Z_]){1,7}"))) {
             String[] parts = command.split("( )+");
             String letters = parts[1];
             if (!currentPlayer.getFrame().isLegalExchange(scrabble.getPool(),letters)) {
                 printExchangeError(currentPlayer.getFrame().getErrorCode());
             } else {
                 currentPlayer.getFrame().exchange(scrabble.getPool(),letters);
+                currentPlayer.getFrame().resetTilesToGoInPool();
                 printTiles();
                 scrabble.zeroScorePlay();
                 if (scrabble.isZeroScorePlaysOverLimit()) {
@@ -216,8 +216,7 @@ public class UI {
                     scrabble.turnOver();
                 }
             }
-        }
-        else {
+        } else {
             printLine("Error: command syntax incorrect. See help.");
         }
         if (gameOver) {
@@ -275,35 +274,10 @@ public class UI {
         printLine("Pool has " + scrabble.getPool().size() + " tiles");
     }
 
-    private boolean isValidWord(String input) {
-        String command = input.trim().toUpperCase();
-        String[] parts = command.split("( )+");
-        String word = parts[1];
-        try {
-            FileReader fileIn = new FileReader("C:\\Users\\lakes\\Desktop\\dictionary.txt");
-            BufferedReader reader = new BufferedReader(fileIn);
-            String line;
-            while((line = reader.readLine()) != null) {
-                if((line.contains(word))) {
-                    scrabble.zeroScorePlay();
-                    if (scrabble.isZeroScorePlaysOverLimit()) {
-                        printZeroScorePlaysOverLimit();
-                        gameOver = true;
-                    }
-                    return true;
-                }
-            }
-        }catch (IOException e){
-            return false;
-        }
-        return false;
-    }
-
     private void printHelp() {
-        printLine("Command options: Q (quit), P (pass), X (exchange), S (scores), O (pool), C(challenge) or play");
+        printLine("Command options: Q (quit), P (pass), X (exchange), S (scores), O (pool) or play");
         printLine("For an exchange, enter the letters that you wish to exchange. E.g. X ABC");
         printLine("For a play, enter the grid reference of the first letter, and A (across) or D (down)m and the word optionally including any letters already on the board. E.g. A1 D HELLO");
-        printLine("For challenge enter word being challenged. E.g. C TORN");
         printLine("For blank use underscore");
     }
 
@@ -331,6 +305,9 @@ public class UI {
             case Board.WORD_EXCLUDES_LETTERS:
                 message = "Error: The word places excludes letters already on the board";
                 break;
+            case Board.WORD_ONLY_ONE_LETTER:
+            	message = "Error: The word can't be one letter long";
+            	break;
         }
         printLine(message);
     }
@@ -387,3 +364,5 @@ public class UI {
         printLine("GAME OVER");
     }
 }
+
+
