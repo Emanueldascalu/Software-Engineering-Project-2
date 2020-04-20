@@ -1,6 +1,3 @@
-package application;
-
-//A trie object is created in Scrabble to store the Dictionary
 public class Trie
 {	
 	private class TrieNode 
