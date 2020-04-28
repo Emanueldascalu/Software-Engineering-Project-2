@@ -49,14 +49,14 @@ public class AlphabetInc implements BotAPI {
 			Tile tile = new Tile(frameAsString.toCharArray()[i]);
 			if(frameAsString.toCharArray()[i] == '_') 
 			{
-				Random rand = new Random(26);
-				int index = rand.nextInt();
+				Random rand = new Random();
+				int index = rand.nextInt(26);
 				char designation = alphabet[index];
 				blankDesignations.append(designation);
-				lettersOnFrame.append(designation);
+				//lettersOnFrame.append(designation);
 			}
 			
-			else
+			//else
 			lettersOnFrame.append(frameAsString.toCharArray()[i]);
 			
 			listOfTiles.add(tile);
@@ -95,23 +95,21 @@ public class AlphabetInc implements BotAPI {
 	    		
 				int k_Of_N = 7;
 				int offset = 1;
-				permK(lettersToBePermuted, 0, k_Of_N, allPossiblePermutations);
+				permK_of_N(lettersToBePermuted, 0, k_Of_N, allPossiblePermutations);
 				
-				if(blankDesignations.length() > 0)
+
 				findFirstWord(dict, allPossiblePermutations, words, frame, offset, blankDesignations.toString());
 				
-				else
-				findFirstWord(dict, allPossiblePermutations, words, frame, offset);
+
 				
 				while(words.isEmpty() && offset < 7 && k_Of_N > 1) 
 				{
-					permK(lettersToBePermuted, 0, k_Of_N - 1, allPossiblePermutations);
+					permK_of_N(lettersToBePermuted, 0, k_Of_N - 1, allPossiblePermutations);
 					
-					if(blankDesignations.length() > 0)
+					
 					findFirstWord(dict, allPossiblePermutations, words, frame, offset + 1, blankDesignations.toString());
 					
-					else
-					findFirstWord(dict, allPossiblePermutations, words, frame, offset + 1);
+					
 						
 					k_Of_N--;
 					offset++;
@@ -137,23 +135,17 @@ public class AlphabetInc implements BotAPI {
 	        	
 				int k_Of_N = 7;
 				int offset = 6;
-				permK(lettersToBePermuted, 0, k_Of_N, allPossiblePermutations);
+				permK_of_N(lettersToBePermuted, 0, k_Of_N, allPossiblePermutations);
 	        	
-				if(blankDesignations.length() > 0)
 				findWords(dict, allPossiblePermutations, words, frame, offset, tileLocations, blankDesignations.toString());
 					
-				else
-				findWords(dict, allPossiblePermutations, words, frame, offset, tileLocations);
 				
 	        	while(words.isEmpty() && offset > 0 && k_Of_N > 1) 
 				{
-					permK(lettersToBePermuted, 0, k_Of_N - 1, allPossiblePermutations);
+					permK_of_N(lettersToBePermuted, 0, k_Of_N - 1, allPossiblePermutations);
 					
-					if(blankDesignations.length() > 0)
 					findWords(dict, allPossiblePermutations, words, frame, offset - 1, tileLocations, blankDesignations.toString());
 						
-					else
-					findWords(dict, allPossiblePermutations, words, frame, offset - 1, tileLocations);
 					
 					k_Of_N--;
 					offset--;
@@ -162,7 +154,8 @@ public class AlphabetInc implements BotAPI {
 	    	
 	    	if(words.isEmpty()) 
 			{
-	    		Random numToBeExchanged = new Random(7);
+	    		Random rand1 = new Random();
+	    		int numToBeExchanged = rand1.nextInt(lettersOnFrame.length());
 	    		StringBuilder str = new StringBuilder();
 	    		str.append("EXCHANGE ");
 	    		
@@ -175,12 +168,12 @@ public class AlphabetInc implements BotAPI {
 	    		al.add(5);
 	    		al.add(6);
 	    		
-	    		for(int i = 0; i < numToBeExchanged.nextInt(); i++) 
+	    		for(int i = 0; i < numToBeExchanged; i++) 
 	    		{
-	    			Random index = new Random(al.size());
-	    			
-	    			str.append(frameAsString.charAt(index.nextInt()));
-	    			al.remove(index.nextInt());
+	    			Random rand2 = new Random();
+	    			int index = rand2.nextInt(al.size());
+	    			str.append(lettersOnFrame.charAt(index));
+	    			al.remove(index);
 	    		}
 	    		
 				command = str.toString();
@@ -227,119 +220,44 @@ public class AlphabetInc implements BotAPI {
         return command;
     }
     
-    public void findFirstWord(Trie dict, ArrayList<String> allPossiblePermutations, ArrayList<Word> words, Frame frame, int offset) 
-    {
-    	for(int i = 0; i < allPossiblePermutations.size(); i++) 
-		{
-			String possibleWord = allPossiblePermutations.get(i);
-			if(dict.search(possibleWord)) 
-			{	
-				Random acrossOrDown = new Random(2);
-				if(acrossOrDown.nextInt() == 1)
-				{
-					for(int r = offset; r <= 7; r++) 
-					{	
-						if(board.isLegalPlay(frame, new Word(r, 7, false, possibleWord)))
-						words.add(new Word(r, 7, false, possibleWord));
-					}
-				}
-				
-				else 
-				{
-					for(int c = offset; c <= 7; c++) 
-					{
-						if(board.isLegalPlay(frame, new Word(7, c, true, possibleWord)))
-						words.add(new Word(7, c, true, possibleWord));
-					}
-				}
-			}
-		}
-    }
-    
-    public void findWords(Trie dict, ArrayList<String> allPossiblePermutations, ArrayList<Word> words, Frame frame, int offset, ArrayList<Coordinates> tileLocations) 
-    {
-    	for(int i = 0; i < allPossiblePermutations.size(); i++) 
-		{
-			String possibleWord = allPossiblePermutations.get(i);
-			if(dict.search(possibleWord)) 
-			{					
-				for(int j = 0; j < tileLocations.size(); j++) 
-				{
-					Coordinates coordinate = tileLocations.get(j);
-					int row = coordinate.getRow();
-					int col = coordinate.getCol();
-					
-					for(int r = row - offset; r <= row; r++) 
-					{	
-						if(r >= 0 && r <= 14)
-						{	
-							if(board.isLegalPlay(frame, new Word(r, col, false, possibleWord)))	
-							words.add(new Word(r, col, false, possibleWord));
-						}
-					}
-					
-					for(int c = col - offset; c <= col; c++) 
-					{
-						if(c >= 0 && c <= 14)
-						{	
-							if(board.isLegalPlay(frame, new Word(row, c, true, possibleWord)))
-							words.add(new Word(row, c, true, possibleWord));
-						}
-					}
-					
-					for(int r = row - offset; r <= row; r++) 
-					{	
-						if(r >= 0 && r <= 14)
-						{	if(board.isLegalPlay(frame, new Word(r, col - 1, false, possibleWord)))
-							words.add(new Word(r, col - 1, false, possibleWord));
-						}
-					}
-					
-					for(int c = col - offset; c <= col; c++) 
-					{
-						if(c >= 0 && c <= 14) 
-						{
-							if(board.isLegalPlay(frame, new Word(row - 1, c, true, possibleWord)))
-							words.add(new Word(row - 1, c, true, possibleWord));
-						}
-					}
-					
-					for(int r = row - offset; r <= row; r++) 
-					{	
-						if(r >= 0 && r <= 14)
-						{
-							if(board.isLegalPlay(frame, new Word(r, col + 1, false, possibleWord)))
-							words.add(new Word(r, col + 1, false, possibleWord));
-						}
-					}
-					
-					for(int c = col - offset; c <= col; c++) 
-					{
-						if(c >= 0 && c <= 14) 
-						{
-							if(board.isLegalPlay(frame, new Word(row + 1, c, true, possibleWord)))
-							words.add(new Word(row + 1, c, true, possibleWord));
-						}
-					}
-				}
-			}
-		}
-    }
-    
     public void findFirstWord(Trie dict, ArrayList<String> allPossiblePermutations, ArrayList<Word> words, Frame frame, int offset, String blankDesignations) 
     {
     	for(int i = 0; i < allPossiblePermutations.size(); i++) 
 		{
 			String possibleWord = allPossiblePermutations.get(i);
-			if(dict.search(possibleWord)) 
+			StringBuilder possibleLetters = new StringBuilder();
+			
+			int index = 0;
+			for(int j = 0; j < possibleWord.length(); j++) 
+			{
+				if(possibleWord.charAt(j) == '_') 
+				{
+					possibleLetters.append(blankDesignations.charAt(index));
+					index++;
+				}
+				
+				else
+					possibleLetters.append(possibleWord.charAt(j));
+			}
+			
+			if(dict.search(possibleLetters.toString())) 
 			{		
-				Random acrossOrDown = new Random(2);
-				if(acrossOrDown.nextInt() == 1)
+				Random acrossOrDown = new Random();
+				if(acrossOrDown.nextInt(2) == 1)
 				{
 					for(int r = offset; r <= 7; r++) 
 					{	
-						if(board.isLegalPlay(frame, new Word(r, 7, false, possibleWord, blankDesignations)))
-						words.add(new Word(r, 7, false, possibleWord, blankDesignations));
+						if(possibleWord.contains("_")) 
+						{
+							if(board.isLegalPlay(frame, new Word(r, 7, false, possibleWord, blankDesignations)))
+							words.add(new Word(r, 7, false, possibleWord, blankDesignations));
+						}
+						
+						else
+						{
+							if(board.isLegalPlay(frame, new Word(r, 7, false, possibleWord)))
+							words.add(new Word(r, 7, false, possibleWord));
+						}
 					}
 				}
 				
@@ -347,8 +265,17 @@ public class AlphabetInc implements BotAPI {
 				{
 					for(int c = offset; c <= 7; c++) 
 					{
-						if(board.isLegalPlay(frame, new Word(7, c, true, possibleWord, blankDesignations)))
-						words.add(new Word(7, c, true, possibleWord, blankDesignations));
+						if(possibleWord.contains("_")) 
+						{
+							if(board.isLegalPlay(frame, new Word(7, c, true, possibleWord, blankDesignations)))
+							words.add(new Word(7, c, true, possibleWord, blankDesignations));
+						}
+						
+						else
+						{
+							if(board.isLegalPlay(frame, new Word(7, c, true, possibleWord)))
+							words.add(new Word(7, c, true, possibleWord));
+						}
 					}
 				}
 			}
@@ -360,7 +287,22 @@ public class AlphabetInc implements BotAPI {
     	for(int i = 0; i < allPossiblePermutations.size(); i++) 
 		{
 			String possibleWord = allPossiblePermutations.get(i);
-			if(dict.search(possibleWord)) 
+			StringBuilder possibleLetters = new StringBuilder();
+			
+			int index = 0;
+			for(int j = 0; j < possibleWord.length(); j++) 
+			{
+				if(possibleWord.charAt(j) == '_') 
+				{
+					possibleLetters.append(blankDesignations.charAt(index));
+					index++;
+				}
+				
+				else
+					possibleLetters.append(possibleWord.charAt(j));
+			}
+			
+			if(dict.search(possibleLetters.toString()))
 			{					
 				for(int j = 0; j < tileLocations.size(); j++) 
 				{
@@ -370,54 +312,109 @@ public class AlphabetInc implements BotAPI {
 					
 					for(int r = row - offset; r <= row; r++) 
 					{	
-						if(r >= 0 && r <= 14)
+						if(r >= 0 && r <= 14 && col >= 0 && col <= 14)
 						{	
-							if(board.isLegalPlay(frame, new Word(r, col, false, possibleWord, blankDesignations)))	
-							words.add(new Word(r, col, false, possibleWord, blankDesignations));
+							if(possibleWord.contains("_")) 
+							{
+								if(board.isLegalPlay(frame, new Word(r, col, false, possibleWord, blankDesignations)))	
+								words.add(new Word(r, col, false, possibleWord, blankDesignations));
+							}
+							
+							else 
+							{
+								if(board.isLegalPlay(frame, new Word(r, col, false, possibleWord)))	
+								words.add(new Word(r, col, false, possibleWord));
+							}
 						}
 					}
 					
 					for(int c = col - offset; c <= col; c++) 
 					{
-						if(c >= 0 && c <= 14)
+						if(c >= 0 && c <= 14 && row >= 0 && row <= 14)
 						{	
-							if(board.isLegalPlay(frame, new Word(row, c, true, possibleWord, blankDesignations)))
-							words.add(new Word(row, c, true, possibleWord, blankDesignations));
+							if(possibleWord.contains("_")) 
+							{
+								if(board.isLegalPlay(frame, new Word(row, c, true, possibleWord, blankDesignations)))	
+								words.add(new Word(row, c, true, possibleWord, blankDesignations));
+							}
+							
+							else 
+							{
+								if(board.isLegalPlay(frame, new Word(row, c, true, possibleWord)))	
+								words.add(new Word(row, c, true, possibleWord));
+							}
 						}
 					}
 					
 					for(int r = row - offset; r <= row; r++) 
 					{	
-						if(r >= 0 && r <= 14)
-						{	if(board.isLegalPlay(frame, new Word(r, col - 1, false, possibleWord, blankDesignations)))
-							words.add(new Word(r, col - 1, false, possibleWord, blankDesignations));
+						if(r >= 0 && r <= 14 && col - 1 >= 0 && col - 1 <= 14)
+						{	
+							if(possibleWord.contains("_")) 
+							{
+								if(board.isLegalPlay(frame, new Word(r, col - 1, false, possibleWord, blankDesignations)))
+								words.add(new Word(r, col - 1, false, possibleWord, blankDesignations));
+							}
+							
+							else 
+							{
+								if(board.isLegalPlay(frame, new Word(r, col - 1, false, possibleWord)))
+								words.add(new Word(r, col - 1, false, possibleWord));
+							}
 						}
 					}
 					
 					for(int c = col - offset; c <= col; c++) 
 					{
-						if(c >= 0 && c <= 14) 
+						if(c >= 0 && c <= 14 && row - 1 >= 0 && row - 1 <= 14) 
 						{
-							if(board.isLegalPlay(frame, new Word(row - 1, c, true, possibleWord, blankDesignations)))
-							words.add(new Word(row - 1, c, true, possibleWord, blankDesignations));
+							if(possibleWord.contains("_")) 
+							{
+								if(board.isLegalPlay(frame, new Word(row - 1, c, true, possibleWord, blankDesignations)))
+								words.add(new Word(row - 1, c, true, possibleWord, blankDesignations));
+							}
+							
+							else 
+							{
+								if(board.isLegalPlay(frame, new Word(row - 1, c, true, possibleWord)))
+								words.add(new Word(row - 1, c, true, possibleWord));
+							}
 						}
 					}
 					
 					for(int r = row - offset; r <= row; r++) 
 					{	
-						if(r >= 0 && r <= 14)
+						if(r >= 0 && r <= 14 && col + 1 >= 0 && col + 1 <= 14)
 						{
-							if(board.isLegalPlay(frame, new Word(r, col + 1, false, possibleWord, blankDesignations)))
-							words.add(new Word(r, col + 1, false, possibleWord, blankDesignations));
+							if(possibleWord.contains("_")) 
+							{
+								if(board.isLegalPlay(frame, new Word(r, col + 1, false, possibleWord, blankDesignations)))
+								words.add(new Word(r, col + 1, false, possibleWord, blankDesignations));
+							}
+							
+							else 
+							{
+								if(board.isLegalPlay(frame, new Word(r, col + 1, false, possibleWord)))
+								words.add(new Word(r, col + 1, false, possibleWord));
+							}
 						}
 					}
 					
 					for(int c = col - offset; c <= col; c++) 
 					{
-						if(c >= 0 && c <= 14) 
+						if(c >= 0 && c <= 14 && row + 1 >= 0 && row + 1 <= 14) 
 						{
-							if(board.isLegalPlay(frame, new Word(row + 1, c, true, possibleWord, blankDesignations)))
-							words.add(new Word(row + 1, c, true, possibleWord, blankDesignations));
+							if(possibleWord.contains("_")) 
+							{
+								if(board.isLegalPlay(frame, new Word(row + 1, c, true, possibleWord, blankDesignations)))
+								words.add(new Word(row + 1, c, true, possibleWord, blankDesignations));
+							}
+							
+							else 
+							{
+								if(board.isLegalPlay(frame, new Word(row + 1, c, true, possibleWord)))
+								words.add(new Word(row + 1, c, true, possibleWord));
+							}
 						}
 					}
 				}
@@ -500,11 +497,11 @@ public class AlphabetInc implements BotAPI {
     	return trie;
     }
 
-	public void permK(ArrayList<Character> p, int i, int k, ArrayList<String> storePermutations)
+	public void permK_of_N(ArrayList<Character> n, int i, int k, ArrayList<String> storePermutations)
 	{
 		if(i == k)
 		{
-			List<Character> c = p.subList(0, k);
+			List<Character> c = n.subList(0, k);
 			StringBuilder str = new StringBuilder();
 			for(int l = 0; l < c.size(); l++) 
 			{
@@ -515,11 +512,11 @@ public class AlphabetInc implements BotAPI {
 			return;
 		}
 			
-		for(int j=i; j<p.size(); j++)
+		for(int j = i; j < n.size(); j++)
 		{
-			Collections.swap(p, i, j);
-			permK(p, i + 1, k, storePermutations);    
-			Collections.swap(p, i, j);
+			Collections.swap(n, i, j);
+			permK_of_N(n, i + 1, k, storePermutations);    
+			Collections.swap(n, i, j);
 		}
 	}
 }
